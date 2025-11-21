@@ -24,6 +24,14 @@ class DanBot(AgentBase):
         self._choices = [
             (i, j) for i in range(self._board_size) for j in range(self._board_size)
         ]
+    
+    def analyse_board(self, board: Board) -> float:
+        """Returns a float representing how close each player is to winning.
+        -INF means red has won, 
+        INF means blue has won
+        """
+
+        pass
 
     def make_move(self, turn: int, board: Board, opp_move: Move | None) -> Move:
         """The game engine will call this method to request a move from the agent.
