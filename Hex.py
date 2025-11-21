@@ -66,23 +66,46 @@ if __name__ == "__main__":
             "If the flag is not present, the result will be printed to the console, via stderr."
         ),
     )
-
+    parser.add_argument(
+        "-r",
+        "--repeat",
+        type=int,
+        default=1,
+        help="Specify the number of times to repeat the game between the two agents.",
+    )
     args = parser.parse_args()
     p1_path, p1_class = args.player1.split(" ")
     p2_path, p2_class = args.player2.split(" ")
     p1 = importlib.import_module(p1_path)
     p2 = importlib.import_module(p2_path)
-    g = Game(
-        player1=Player(
-            name=args.player1Name,
-            agent=getattr(p1, p1_class)(Colour.RED),
-        ),
-        player2=Player(
-            name=args.player2Name,
-            agent=getattr(p2, p2_class)(Colour.BLUE),
-        ),
-        board_size=args.board_size,
-        logDest=args.log,
-        verbose=args.verbose,
-    )
-    g.run()
+    p1_wins = 0
+    p2_wins = 0
+    for i in range(args.repeat):
+        print(f"Starting game {i + 1}")
+        g = Game(
+            player1=Player(
+                name=args.player1Name,
+                agent=getattr(p1, p1_class)(Colour.RED),
+            ),
+            player2=Player(
+                name=args.player2Name,
+                agent=getattr(p2, p2_class)(Colour.BLUE),
+            ),
+            board_size=args.board_size,
+            logDest=args.log,
+            verbose=args.verbose,
+        )
+        g.run()
+        if g.has_finished:
+            if g.winning_player_name == g.player1.name:
+                p1_wins += 1
+            elif g.winning_player_name == g.player2.name:
+                p2_wins += 1
+        print(f"Game {i + 1} finished. Winner: {g.winning_player_name if g.has_finished and g.winning_player_name else 'N/A'}")
+
+    print("All games finished.")
+    # print the fraction of wins for each player
+    player1_win_rate = p1_wins / args.repeat
+    player2_win_rate = p2_wins / args.repeat
+    print(f"Player 1 ({args.player1Name}) win rate: {player1_win_rate}")
+    print(f"Player 2 ({args.player2Name}) win rate: {player2_win_rate}")
