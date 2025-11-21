@@ -47,8 +47,6 @@ def format_result(
 
 class Game:
     """This class describes a game of Hex."""
-    has_finished: bool = False
-    winning_player_name: str | None = None
 
     # the maximum time allocated for a match per player
     # 5 minutes in nanoseconds (min * s/min * ns/s)
@@ -258,8 +256,6 @@ class Game:
             print(f"{p.name},{p.move_time}", file=self.logDest)
         print(f"winner,{winner},{status.name}", file=self.logDest)
         logger.info(f"Total Game Time: {Game.ns_to_s(total_time)}s")
-        self.has_finished = True
-        self.winning_player_name = winner
 
         return format_result(
             player1_name=self.player1.name,

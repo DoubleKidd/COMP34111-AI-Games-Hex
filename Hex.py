@@ -1,6 +1,7 @@
 import argparse
 import importlib
 import sys
+from random import choice
 
 from src.Colour import Colour
 from src.Game import Game
@@ -78,30 +79,58 @@ if __name__ == "__main__":
     p2_path, p2_class = args.player2.split(" ")
     p1 = importlib.import_module(p1_path)
     p2 = importlib.import_module(p2_path)
+
     p1_wins = 0
     p2_wins = 0
+
+    player1_red = True
+
     for i in range(args.repeat):
         print(f"Starting game {i + 1}")
-        g = Game(
-            player1=Player(
-                name=args.player1Name,
-                agent=getattr(p1, p1_class)(Colour.RED),
-            ),
-            player2=Player(
-                name=args.player2Name,
-                agent=getattr(p2, p2_class)(Colour.BLUE),
-            ),
-            board_size=args.board_size,
-            logDest=args.log,
-            verbose=args.verbose,
-        )
+
+        if player1_red:
+            g = Game(
+                player1=Player(
+                    name=args.player1Name,
+                    agent=getattr(p1, p1_class)(Colour.RED),
+                ),
+                player2=Player(
+                    name=args.player2Name,
+                    agent=getattr(p2, p2_class)(Colour.BLUE),
+                ),
+                board_size=args.board_size,
+                logDest=args.log,
+                verbose=args.verbose,
+            )
+        else:
+            g = Game(
+                player1=Player(
+                    name=args.player1Name,
+                    agent=getattr(p1, p1_class)(Colour.RED),
+                ),
+                player2=Player(
+                    name=args.player2Name,
+                    agent=getattr(p2, p2_class)(Colour.BLUE),
+                ),
+                board_size=args.board_size,
+                logDest=args.log,
+                verbose=args.verbose,
+            )
+
+        player1_red = not player1_red
+
         g.run()
-        if g.has_finished:
-            if g.winning_player_name == g.player1.name:
-                p1_wins += 1
-            elif g.winning_player_name == g.player2.name:
-                p2_wins += 1
-        print(f"Game {i + 1} finished. Winner: {g.winning_player_name if g.has_finished and g.winning_player_name else 'N/A'}")
+        
+        winning_colour = g.board.get_winner()
+
+        if g.player1.agent.colour == winning_colour:
+            p1_wins += 1
+            winner_name = args.player1Name
+        elif g.player2.agent.colour == winning_colour:
+            p2_wins += 1
+            winner_name = args.player2Name
+
+        print(f"Game {i + 1} finished. Winner: {winner_name if winner_name else 'N/A'}. Colour: {winning_colour if winning_colour else 'N/A'}")
 
     print("All games finished.")
     # print the fraction of wins for each player
