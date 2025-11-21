@@ -16,7 +16,7 @@ if __name__ == "__main__":
         "--player1",
         default="agents.DefaultAgents.NaiveAgent NaiveAgent",
         type=str,
-        help="Specify the player 1 agent, format: agents.GroupX.AgentFile AgentClassName .e.g. agents.Group0.NaiveAgent NaiveAgent",
+        help="Specify the player 1 agent, format: \"agents.GroupX.AgentFile AgentClassName\" .e.g. \"agents.Group0.NaiveAgent NaiveAgent\"",
     )
     parser.add_argument(
         "-p1Name",
@@ -30,7 +30,7 @@ if __name__ == "__main__":
         "--player2",
         default="agents.DefaultAgents.NaiveAgent NaiveAgent",
         type=str,
-        help="Specify the player 2 agent, format: agents.GroupX.AgentFile AgentClassName .e.g. agents.Group0.NaiveAgent NaiveAgent",
+        help="Specify the player 2 agent, format: \"agents.GroupX.AgentFile AgentClassName\" .e.g. \"agents.Group0.NaiveAgent NaiveAgent\"",
     )
     parser.add_argument(
         "-p2Name",
