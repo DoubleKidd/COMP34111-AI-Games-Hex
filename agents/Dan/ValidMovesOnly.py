@@ -6,26 +6,18 @@ from src.Colour import Colour
 from src.Move import Move
 
 
-class DanBot(AgentBase):
-    """This class describes the default Hex agent. It will randomly send a
-    valid move at each turn, and it will choose to swap with a 50% chance.
-
-    The class inherits from AgentBase, which is an abstract class.
-    The AgentBase contains the colour property which you can use to get the agent's colour.
-    You must implement the make_move method to make the agent functional.
-    You CANNOT modify the AgentBase class, otherwise your agent might not function.
+class Valid(AgentBase):
+    """Random moves, but valid
     """
 
     _choices: list[Move]
     _board_size: int = 11
-    _internal_board: Board
 
     def __init__(self, colour: Colour):
         super().__init__(colour)
         self._choices = [
             (i, j) for i in range(self._board_size) for j in range(self._board_size)
         ]
-        self._internal_board = None
     
     def analyse_board(self, board: Board) -> float:
         """Returns a float representing how close each player is to winning.
