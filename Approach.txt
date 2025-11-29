@@ -1,0 +1,61 @@
+I'm going to build an alphazero style deep learning solution, where a number of neural networks are used to run an efficient MCTS.
+
+First I set up some of the neural network design.
+
+
+For our input, I'm going to use 2 layers of 11 x 11 grids which are numpy arrays. - utils.py (encode_board)
+The first layer will represent the positions of the agent's pieces. 
+The second layer will represent the positions of the opponent's pieces.
+
+I will also transpose the board for the agent playing as BLUE, so that the neural network always sees the board from the perspective of the player connecting TOP to BOTTOM.
+
+This is implemented in utils as encode_board. We must remember to transpose the board back when making moves.
+
+Effectively this allows our AI to 'see' the board.
+
+
+Next we are creating the neural network architecture. - model.py
+There are Convolutional layers which use kernal (filter over a section of the board) to extract board patterns.
+We will use a ResNet architecture, with a number of feed foward residual blocks as our main brain.
+The network will have two heads:
+- A policy head, which outputs a probability distribution over all possible moves.
+- A value head, which outputs a single scalar value representing the expected outcome of the game from the current state.
+Everything here gets trained.
+
+
+Then we need a way to select moves using the neural network. - mcts.py
+We will use Monte Carlo Tree Search (MCTS) to select moves.
+MCTS will use the policy and value outputs from the neural network to guide its search.
+The policy output will be used to prioritize which moves to explore.
+The value output will be used to evaluate the desirability of game states during the search.
+This combination of neural networks and MCTS allows the agent to make informed decisions based on both learned patterns and strategic exploration of possible future states.
+It also allows the training to be specific and more efficient, instead of requiring exploration of the entire game tree.
+Method:
+- Selection: Follow the path of moves that have high Visit Counts (N) and high Win Rates (Q).
+- Expansion: When we hit a new board state, ask the Neural Network: "Who is winning? (v) And where should I move? (p).
+- Backpropagation: Update the path we took with the new value.
+
+This then gets implemented into the agent. 
+The last thing worth mentioning is the handling of the swap rule on turn 2.
+On turn 2, if the opponent's first move is too strong (as determined by the value head of the neural network), we will swap sides and take that move instead.
+
+Finally, we create train.py, which will handle the self play games, data collection, and training of the neural network.
+This allows the agent to improve over time by learning from its own experiences.
+It loops through the following steps:
+- Self-Play: The AI plays X games against itself using its current weights.
+- Data Collection: We record every board position it saw, the move probabilities MCTS calculated (the "target" policy), and who eventually won that game.
+- Training: We feed this data into the Neural Network.
+        We teach the Policy Head to predict the MCTS move probabilities.
+        We teach the Value Head to predict the game winner.
+- Save: We run a tournament of 10 games aganet the previous best model, and overwrite if we win more than 50% of the games (so 6 or more games).
+This will run infinitely,but the best model will be saved after each training iteration, so it can be stopped safely using Ctrl+C.
+    Note, when training, if cntrl+c is used during saving of a model, that model may be corrupted.
+    We use a temporary file and then rename it to avoid this, so only the last completed model save will be corrupted in this case.
+
+The loss calculated is a combination of the policy loss (cross-entropy between predicted and target move probabilities) and value loss (mean squared error between predicted and actual game outcomes).
+Lower loss indicates the model is better at predicting both the best moves and the expected game outcomes.
+
+
+I plan to train on a simpler smaller board (6x6) first to ensure everything is working, and get a basic level of play.
+This will last roughly 3 hours of training, or until the loss gets below 1.5.
+Then I will scale up to the full 11x11 board for stronger play.
