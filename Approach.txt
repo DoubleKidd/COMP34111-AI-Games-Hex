@@ -59,3 +59,6 @@ Lower loss indicates the model is better at predicting both the best moves and t
 I plan to train on a simpler smaller board (6x6) first to ensure everything is working, and get a basic level of play.
 This will last roughly 3 hours of training, or until the loss gets below 1.5.
 Then I will scale up to the full 11x11 board for stronger play.
+After a day of training, i noticed that (on iteration 31), we hadn't actually had a winning agent since iteration 11. Lots of full loss or draws.
+As such reduce the cap to becoming the new bets model to winning 50% (half) the games. 
+While this doesn't show that the model is better, due to the training time this model SHOULD have better weights, and so this should in the long term improve it.

@@ -20,7 +20,15 @@ class DeepLearningAgent(AgentBase):
         self._board_size = 11
         
         # 1. Initialize the Network
-        self.device = torch.device("cpu") # Use CPU for submission/playing
+        # Auto-detect device (CUDA, MPS, or CPU)
+        if torch.cuda.is_available():
+            self.device = torch.device("cuda")
+        elif torch.backends.mps.is_available():
+            self.device = torch.device("mps")
+        else:
+            self.device = torch.device("cpu")
+            
+        self.model = AlphaZeroHexNet(board_size=self._board_size).to(self.device)
         self.model = AlphaZeroHexNet(board_size=self._board_size).to(self.device)
         
         # 2. Try to load trained weights
@@ -67,7 +75,7 @@ class DeepLearningAgent(AgentBase):
             
             # Encode board for ME
             input_tensor = encode_board(board, self.colour)
-            input_tensor = torch.from_numpy(input_tensor).unsqueeze(0)
+            input_tensor = torch.from_numpy(input_tensor).to(self.device).unsqueeze(0)
             
             with torch.no_grad():
                 _, value = self.model(input_tensor)
