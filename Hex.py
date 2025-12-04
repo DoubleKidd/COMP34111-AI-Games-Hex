@@ -123,6 +123,7 @@ if __name__ == "__main__":
         
         winning_colour = g.board.get_winner()
 
+        winner_name = None
         if g.player1.agent.colour == winning_colour:
             p1_wins += 1
             winner_name = args.player1Name
