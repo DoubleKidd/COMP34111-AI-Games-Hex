@@ -19,7 +19,13 @@ To run the container use:
 docker run --cpus=8 --memory=8G -v "$(pwd)":/home/hex --name hex --rm -it hex /bin/bash
 ```
 
-If you need GPU access, pass `--runtime=nvidia` to the docker run command.
+If you need GPU access, pass `--runtime=nvidia` and `--gpus all`to the docker run command.
+
+In powershell (with GPU access) run:
+
+```powershell
+docker run --gpus all --cpus=8 --memory=8G -v ${PWD}:/home/hex --name hex-gpu --rm -it hex-gpu
+```
 
 The current repo will be mapped to `/home/hex` within the container.
 If you `cd hex` you should be able to see all your

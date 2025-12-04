@@ -3,6 +3,7 @@ import numpy as np
 import torch
 import copy
 from src.Colour import Colour
+from src.Board import Board
 from src.Tile import Tile
 # Adjust import if your utils file is named differently
 from agents.DeepLearningAgent.utils import encode_board 
@@ -30,7 +31,8 @@ class MCTS:
         # For tournament play, bump this to 100+.
         for _ in range(50):
             # We must DEEP COPY the board because search() modifies it to simulate future turns
-            sim_board = copy.deepcopy(board)
+            # sim_board = copy.deepcopy(board) # Old slow way
+            sim_board = self.clone_board(board) # New fast way
             self.search(sim_board)
 
         # 2. Count Visits
@@ -78,7 +80,11 @@ class MCTS:
             
             # 2b. Ask the Neural Network
             input_tensor = encode_board(board, current_colour)
-            input_tensor = torch.from_numpy(input_tensor).unsqueeze(0) # Add batch dimension (1, 2, 11, 11)
+            
+            # Move tensor to the same device as the model
+            device = next(self.model.parameters()).device
+            input_tensor = torch.from_numpy(input_tensor).to(device).unsqueeze(0)
+            # -------------------------------------------------------------
             
             self.model.eval()
             with torch.no_grad():
@@ -187,3 +193,27 @@ class MCTS:
         policy_2d = policy.reshape(size, size)
         policy_2d_T = policy_2d.T
         return policy_2d_T.flatten()
+
+    def clone_board(self, original_board):
+            """
+            Fast manual clone of the board.
+            Bypasses deepcopy by creating a fresh board and manually copying tile states.
+            """
+            # 1. Create a fresh board (this calls __init__, creating blank tiles)
+            new_board = Board(original_board.size)
+            
+            # 2. Copy the winner status (if known) so we don't re-calculate it
+            # We access the protected member _winner directly for speed
+            new_board._winner = original_board._winner
+
+            # 3. Copy the tile colours
+            # We iterate through the grid and just copy the '.colour' attribute.
+            # This is much faster than pickling/unpickling the whole Tile object.
+            for r in range(original_board.size):
+                for c in range(original_board.size):
+                    # Only set if not None to save even more time
+                    old_colour = original_board.tiles[r][c].colour
+                    if old_colour is not None:
+                        new_board.tiles[r][c].colour = old_colour
+            
+            return new_board
