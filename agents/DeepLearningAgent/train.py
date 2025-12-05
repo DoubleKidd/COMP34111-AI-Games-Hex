@@ -47,7 +47,7 @@ def self_play_worker(args):
         while True:
             # Get action probabilities
             # We hardcode temp=1 for training exploration
-            real_probs = mcts.get_action_prob(board, temp=1) # The real view
+            real_probs = mcts.get_action_prob(board, temp=1, simulations=simulations) # The real view
 
             # 2. Create a copy for the TRAINING DATA
             train_probs = list(real_probs)
@@ -91,7 +91,8 @@ def self_play_worker(args):
         return []
 
 class AlphaZeroTrainer:
-    def __init__(self, board_size=6):
+    def __init__(self, board_size=11, simulations=50):
+        self.simulations = simulations
         self.board_size = board_size
         
         # Detect Mac M2 (MPS) vs CUDA vs CPU
@@ -129,7 +130,10 @@ class AlphaZeroTrainer:
         
         while True:
             # temp=1 for exploration during self-play
-            probs = mcts.get_action_prob(board, temp=1)
+            real_probs = mcts.get_action_prob(board, temp=1, simulations=self.simulations)
+
+            # 2. Create a copy for the TRAINING DATA
+            train_probs = list(real_probs)
 
             # If blue, flip board.
             # If it's Blue's turn, the MCTS returned "Real Board" probabilities (Horizontal).
@@ -137,15 +141,15 @@ class AlphaZeroTrainer:
             # We must transpose the probs to match the board.
             if current_colour == Colour.BLUE:
                 # Convert list to numpy, reshape, transpose, flatten, convert back to list
-                probs_np = np.array(probs)
+                probs_np = np.array(real_probs)
                 probs_reshaped = probs_np.reshape(board_size, board_size)
-                probs = probs_reshaped.T.flatten().tolist()
+                train_probs = probs_reshaped.T.flatten().tolist()
             
             
             canonical_board = encode_board(board, current_colour)
-            train_examples.append([canonical_board, probs, current_colour])
+            train_examples.append([canonical_board, train_probs, current_colour])
             
-            action_index = np.random.choice(len(probs), p=probs)
+            action_index = np.random.choice(len(real_probs), p=real_probs)
             row = action_index // self.board_size
             col = action_index % self.board_size
             
@@ -236,7 +240,7 @@ class AlphaZeroTrainer:
         
         print(f" | Result: {wins}/{num_games}")
         
-        # Threshold: Win 60% (6 out of 10) to replace champion
+        # Threshold: Win 50% (5 out of 10) to replace champion
         win_rate = wins / num_games
         return win_rate >= 0.5
 
@@ -344,7 +348,7 @@ if __name__ == "__main__":
     # NOTE: Set board_size=11 for the real run!
     # Decrease episodes_per_iter if it's too slow on CPU
     # trainer = AlphaZeroTrainer(board_size=6)
-    trainer = AlphaZeroTrainer(board_size=11)
+    trainer = AlphaZeroTrainer(board_size=11, simulations=100)
     # trainer.train(num_iterations=1000, episodes_per_iter=100)
     # trainer.train(num_iterations=100, episodes_per_iter=20)
     trainer.train(num_iterations=1000, episodes_per_iter=50)
