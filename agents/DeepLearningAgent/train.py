@@ -284,7 +284,7 @@ class AlphaZeroTrainer:
             dev_name = "cuda" if torch.cuda.is_available() else "cpu"
             
             # Pass the FILENAME, not the weights dict
-            task_args = (worker_model_path, self.board_size, dev_name, 25)
+            task_args = (worker_model_path, self.board_size, dev_name, self.simulations)
             tasks = [task_args for _ in range(episodes_per_iter)]
             
             iteration_examples = []
