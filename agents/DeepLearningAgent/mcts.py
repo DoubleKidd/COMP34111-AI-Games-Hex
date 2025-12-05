@@ -21,15 +21,13 @@ class MCTS:
         self.Es = {}   # Ended (Is the game over at state 's'?)
         self.Vs = {}   # Valid Moves mask for state 's'
 
-    def get_action_prob(self, board, temp=1):
+    def get_action_prob(self, board, temp=1, simulations=50):
         """
         Runs simulations to determine the best move.
         Returns a probability distribution over all 121 moves.
         """
         # Run Simulations
-        # For a student project, 25-50 simulations is usually enough for training.
-        # For tournament play, bump this to 100+.
-        for _ in range(50):
+        for _ in range(simulations):
             # We must DEEP COPY the board because search() modifies it to simulate future turns
             # sim_board = copy.deepcopy(board) # Old slow way
             sim_board = self.clone_board(board) # New fast way
