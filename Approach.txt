@@ -67,3 +67,6 @@ After a week of constant training, I decided to run the bot to see how it did. I
 On looking into this, it looked like the agent was attempting to connect the wrong sides? I checked, and in my training I had forgotten to switch the board if the player was blue. This meant that if the player was blue, it was trying to connect top to bottom not left to right. I added this change. Thats broken everything! I need to train a whole new model now.
 
 I back up the best model to git, just incase, then begin training again.
+After a few iterations I want to test it. Dam it, I messed up again. This time, the correct output was being used, but the wrong data was sent back for training. I was sending blue as horizontal instead of vertical. Drat!
+
+Once again making the modification to the training data and re-running the training, i see the loss reducing much faster which is a good sign. After 27 iterations its down to 3.1, and its consistantly decreasing. This is a good sign that training is operating as intended now. 
