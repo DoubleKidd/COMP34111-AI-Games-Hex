@@ -29,7 +29,6 @@ class DeepLearningAgent(AgentBase):
             self.device = torch.device("cpu")
             
         self.model = AlphaZeroHexNet(board_size=self._board_size).to(self.device)
-        self.model = AlphaZeroHexNet(board_size=self._board_size).to(self.device)
         
         # 2. Try to load trained weights
         # We look for a file named "best_model.pth" in the same folder as this script
@@ -90,17 +89,13 @@ class DeepLearningAgent(AgentBase):
         # 1. Run MCTS Simulations
         # For a real game, you might want 100-200 simulations if time permits.
         # For now, 50 is fast and safe.
-        simulations = 50 
-        for _ in range(simulations):
-            # We copy inside MCTS, so just pass the board
-            self.mcts.get_action_prob(board, temp=0)
+        simulations = 100
+        
         
         # 2. Get the move probabilities (Temperature=0 for competitive play)
-        # Temp=0 means "Always pick the move with the most visits" (Max strength)
-        s = self.mcts.get_board_string(board)
-        counts = [self.mcts.Nsa.get((s, a), 0) for a in range(self._board_size * self._board_size)]
-        
-        best_action_index = np.argmax(counts)
+        # We copy inside MCTS, so just pass the board
+        probs = self.mcts.get_action_prob(board, temp=0, simulations=simulations)
+        best_action_index = np.argmax(probs)
         
         # 3. Convert Index to (Row, Col)
         

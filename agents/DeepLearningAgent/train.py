@@ -47,12 +47,24 @@ def self_play_worker(args):
         while True:
             # Get action probabilities
             # We hardcode temp=1 for training exploration
-            probs = mcts.get_action_prob(board, temp=1)
+            real_probs = mcts.get_action_prob(board, temp=1) # The real view
+
+            # 2. Create a copy for the TRAINING DATA
+            train_probs = list(real_probs)
+
+            # If it's Blue's turn, the MCTS returned "Real Board" probabilities (Horizontal).
+            # But we are saving a "Canonical Board" (Vertical).
+            # We must transpose the probs to match the board.
+            if current_colour == Colour.BLUE:
+                # Convert list to numpy, reshape, transpose, flatten, convert back to list
+                probs_np = np.array(real_probs)
+                probs_reshaped = probs_np.reshape(board_size, board_size)
+                train_probs = probs_reshaped.T.flatten().tolist()
             
             canonical_board = encode_board(board, current_colour)
-            train_examples.append([canonical_board, probs, current_colour])
+            train_examples.append([canonical_board, train_probs, current_colour]) # the always vertical view
             
-            action_index = np.random.choice(len(probs), p=probs)
+            action_index = np.random.choice(len(real_probs), p=real_probs)
             row = action_index // board_size
             col = action_index % board_size
             
@@ -118,6 +130,17 @@ class AlphaZeroTrainer:
         while True:
             # temp=1 for exploration during self-play
             probs = mcts.get_action_prob(board, temp=1)
+
+            # If blue, flip board.
+            # If it's Blue's turn, the MCTS returned "Real Board" probabilities (Horizontal).
+            # But we are saving a "Canonical Board" (Vertical).
+            # We must transpose the probs to match the board.
+            if current_colour == Colour.BLUE:
+                # Convert list to numpy, reshape, transpose, flatten, convert back to list
+                probs_np = np.array(probs)
+                probs_reshaped = probs_np.reshape(board_size, board_size)
+                probs = probs_reshaped.T.flatten().tolist()
+            
             
             canonical_board = encode_board(board, current_colour)
             train_examples.append([canonical_board, probs, current_colour])
@@ -323,6 +346,7 @@ if __name__ == "__main__":
     # trainer = AlphaZeroTrainer(board_size=6)
     trainer = AlphaZeroTrainer(board_size=11)
     # trainer.train(num_iterations=1000, episodes_per_iter=100)
+    # trainer.train(num_iterations=100, episodes_per_iter=20)
     trainer.train(num_iterations=1000, episodes_per_iter=50)
     # increasing or decreasing episodes per iter increases/decreases parrallelism. Use high values for gpu usage.
     # trainer.train(num_iterations=1000, episodes_per_iter=10)
