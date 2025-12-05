@@ -1,5 +1,7 @@
 import logging
+from typing import Callable
 from agents.Naddy.policy import *
+from src.Move import Move
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -17,10 +19,10 @@ def traverse_all(node: Node):
 def mcts_search(
     root: Node,
     iterations: int = 50,
-    selection_policy: callable | None = None,
+    selection_policy: Callable | None = None,
     discount_factor: float = 0.9,
     win_threshold: float = 1.0,
-):
+) -> Move:
     """Performs MCTS search and returns the best immediate next move for the AI."""
     selection_policy = selection_policy or rand_policy
 
@@ -63,9 +65,9 @@ def mcts_search(
     # After all iterations, select the best child of the root node
     if root.children:
         best_child = max(root.children, key=lambda c: c.reward)
-        final_state = best_child.state
-        logger.debug(f"Best Move State after search:\n{final_state}")
-        return final_state
+        final_move = best_child.move
+        logger.debug(f"Best Move State after search:\n{final_move}")
+        return final_move
     else:
         # No moves available, return the root state
-        return root.state
+        return root.move

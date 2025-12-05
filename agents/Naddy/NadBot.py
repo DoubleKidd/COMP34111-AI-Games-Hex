@@ -1,5 +1,7 @@
 from random import choice
 
+from agents.Naddy.node import Node
+from agents.Naddy.search import mcts_search
 from src.AgentBase import AgentBase
 from src.Board import Board
 from src.Colour import Colour
@@ -51,6 +53,7 @@ class NadBot(AgentBase):
             Move: The agent move
         """
 
+        previous_node = None
         # Remove opponents last move from choices
         if opp_move is not None and opp_move.x != -1:
             opponent_move = (opp_move.x, opp_move.y)
@@ -59,12 +62,15 @@ class NadBot(AgentBase):
         if turn == 2:
             return Move(-1, -1)
         else:
-            x, y = choice(self._choices)
-            move = Move(x, y)
+            current_node = Node(
+                state=board,
+                parent=previous_node
+            )
+            best_move = mcts_search(
+                current_node
+            )
 
             # Remove move from choices and return move
-            self._choices.remove((x, y))
-            return move
-
-
-    
+            self._choices.remove((best_move.x, best_move.y))
+            previous_node = current_node
+            return best_move

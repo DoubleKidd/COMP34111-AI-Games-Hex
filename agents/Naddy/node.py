@@ -3,12 +3,16 @@ from typing import Self
 
 from agents.Naddy.evaluate import action, evaluate
 from src.Board import Board
+from src.Colour import Colour
+from src.Move import Move
 
 
 class Node:
-    def __init__(self, state: Board, parent: Self = None):
-        """ Initializes a Node in the MCTS tree. """
+    def __init__(self, state: Board, move: Move = None, colour: Colour = None, parent: Self = None):
+        """Initialise a node."""
         self.state = state
+        self.move = move
+        self.colour = colour
         self.parent = parent
 
         self.children: list[Self] = []
@@ -36,11 +40,13 @@ class Node:
         """Generate child nodes from the current node's state."""
         self.expanded = True
         if self.action_func:
-            child_states = self.action_func(self.state)
+            possible_moves = self.action_func(self.state)
 
-            for new_state in child_states:
+            for move in possible_moves:
+                new_state = self.state.copy()
+                new_state.set_tile_colour(move.x, move.y, self.colour.opposite())
                 # Create a child for each state
-                child_node = Node(new_state, parent=self)
+                child_node = Node(new_state, move=move, colour=self.colour.opposite(), parent=self)
 
                 # Evaluate the state
                 child_node.evaluate()
@@ -53,11 +59,10 @@ class Node:
         return self.children
 
     def best_child(self, policy_func: callable[[Self], Self]) -> Self | None:
-        """ Selects the best child based on the provided policy function. """
+        """Select the best child node based on the tree policy."""
         if not self.children:
             return None  
 
-        # Apply policy function to select the best child
         return policy_func(self.children)  
 
     def backpropagate(self, reward: float):
