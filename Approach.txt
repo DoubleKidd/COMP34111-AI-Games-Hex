@@ -62,3 +62,8 @@ Then I will scale up to the full 11x11 board for stronger play.
 After a day of training, i noticed that (on iteration 31), we hadn't actually had a winning agent since iteration 11. Lots of full loss or draws.
 As such reduce the cap to becoming the new bets model to winning 50% (half) the games. 
 While this doesn't show that the model is better, due to the training time this model SHOULD have better weights, and so this should in the long term improve it.
+
+After a week of constant training, I decided to run the bot to see how it did. I pitted it against the ValidNiaveAgent we made earlier. The firts time, it timedout, so I reduced the number of simulations down to 10. 
+On looking into this, it looked like the agent was attempting to connect the wrong sides? I checked, and in my training I had forgotten to switch the board if the player was blue. This meant that if the player was blue, it was trying to connect top to bottom not left to right. I added this change. Thats broken everything! I need to train a whole new model now.
+
+I back up the best model to git, just incase, then begin training again.
