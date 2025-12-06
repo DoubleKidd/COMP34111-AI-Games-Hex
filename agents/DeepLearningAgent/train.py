@@ -351,6 +351,6 @@ if __name__ == "__main__":
     trainer = AlphaZeroTrainer(board_size=11, simulations=100)
     # trainer.train(num_iterations=1000, episodes_per_iter=100)
     # trainer.train(num_iterations=100, episodes_per_iter=20)
-    trainer.train(num_iterations=1000, episodes_per_iter=50)
+    trainer.train(num_iterations=200, episodes_per_iter=50)
     # increasing or decreasing episodes per iter increases/decreases parrallelism. Use high values for gpu usage.
     # trainer.train(num_iterations=1000, episodes_per_iter=10)
