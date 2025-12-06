@@ -70,3 +70,8 @@ I back up the best model to git, just incase, then begin training again.
 After a few iterations I want to test it. Dam it, I messed up again. This time, the correct output was being used, but the wrong data was sent back for training. I was sending blue as horizontal instead of vertical. Drat!
 
 Once again making the modification to the training data and re-running the training, i see the loss reducing much faster which is a good sign. After 27 iterations its down to 3.1, and its consistantly decreasing. This is a good sign that training is operating as intended now. 
+Rough Expectation:
+    Iterations 0-20: The agent will place pieces randomly. It might lose to the random agent.
+    Iterations 20-50: It will start connecting pieces locally (small chains), but will miss long-distance blocks.
+    Iterations 50-100: It will consistently beat the random agent. It will understand "I need to cross the board."
+    Iterations 100+: It will start developing basic strategies (like the "bridge" connection).
