@@ -206,4 +206,8 @@ And then I stopped to test after iteration 6
 Training Policy Loss: 3.0836
 Training Validation Loss: 0.0427
 Training Loss: 3.1263
-And in our 50 games this game a 0.7 win rate. Lets keep training.
+And in 10 games this model had a 0.7 win rate. Lets keep training.
+
+After 50 iterations, it got a 1.0 win rate (against the niave bot). At this point, since the model is already advanced, I lower the learning rate from 0.001 to 0.0005 as the model does not need to learn huge changes anymore, only refining its model.
+I also change the threshold of games to win to update the model. Now that the model has learnt some good weights, it should use the full AlphaZero style strategy of only improving when it certainly improves. I am still only running a small number of games (10) for this competition, due to the comuting time it takes, however due to this, I increase the threshold past the previous threshold of 50% to 90%, basically saying that if the model is not consistently better than the previous one, it should be ignored. Looking at our past data, this will work as we seem to only get three outcomes, full loss, full win or draw. This is likely due to having the temperature set so low. 
+Due to this i can also drop the number of evaluation games down to 6, meaning that the new model must win every game to become the new best. 
