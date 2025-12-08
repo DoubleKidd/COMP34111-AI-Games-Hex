@@ -1,0 +1,486 @@
+=== Iteration 1 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.9849
+Training Validation Loss: 0.0341
+Training Loss: 3.0190
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 1 took 1890.92 seconds (31.52 minutes).
+
+=== Iteration 2 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.9356
+Training Validation Loss: 0.0588
+Training Loss: 2.9944
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 2 took 1730.90 seconds (28.85 minutes).
+
+=== Iteration 3 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.8435
+Training Validation Loss: 0.0314
+Training Loss: 2.8749
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 3 took 1794.01 seconds (29.90 minutes).
+
+=== Iteration 4 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6982
+Training Validation Loss: 0.0298
+Training Loss: 2.7281
+Evaluating... ARENA (10 games): WWWWWWWWWW | Result: 10/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 4 took 1832.19 seconds (30.54 minutes).
+
+=== Iteration 5 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.7037
+Training Validation Loss: 0.0294
+Training Loss: 2.7331
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 5 took 1724.00 seconds (28.73 minutes).
+
+=== Iteration 6 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6778
+Training Validation Loss: 0.0430
+Training Loss: 2.7208
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 6 took 1847.60 seconds (30.79 minutes).
+
+=== Iteration 7 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6690
+Training Validation Loss: 0.0393
+Training Loss: 2.7084
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 7 took 1788.11 seconds (29.80 minutes).
+
+=== Iteration 8 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.7766
+Training Validation Loss: 0.0389
+Training Loss: 2.8154
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 8 took 1687.60 seconds (28.13 minutes).
+
+=== Iteration 9 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.5804
+Training Validation Loss: 0.0375
+Training Loss: 2.6178
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 9 took 1927.64 seconds (32.13 minutes).
+
+=== Iteration 10 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6365
+Training Validation Loss: 0.0382
+Training Loss: 2.6747
+Evaluating... ARENA (10 games): WWWWWWWWWW | Result: 10/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 10 took 1777.92 seconds (29.63 minutes).
+
+=== Iteration 11 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6774
+Training Validation Loss: 0.0365
+Training Loss: 2.7139
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 11 took 1858.05 seconds (30.97 minutes).
+
+=== Iteration 12 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.8094
+Training Validation Loss: 0.0394
+Training Loss: 2.8488
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 12 took 1854.16 seconds (30.90 minutes).
+
+=== Iteration 13 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6671
+Training Validation Loss: 0.0391
+Training Loss: 2.7062
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 13 took 1883.63 seconds (31.39 minutes).
+
+=== Iteration 14 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.7067
+Training Validation Loss: 0.0308
+Training Loss: 2.7375
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 14 took 1812.38 seconds (30.21 minutes).
+
+=== Iteration 15 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.7679
+Training Validation Loss: 0.0257
+Training Loss: 2.7936
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 15 took 1905.55 seconds (31.76 minutes).
+
+=== Iteration 16 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6450
+Training Validation Loss: 0.0423
+Training Loss: 2.6873
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 16 took 1826.63 seconds (30.44 minutes).
+
+=== Iteration 17 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6672
+Training Validation Loss: 0.0261
+Training Loss: 2.6932
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 17 took 1859.46 seconds (30.99 minutes).
+
+=== Iteration 18 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6958
+Training Validation Loss: 0.0441
+Training Loss: 2.7399
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 18 took 1793.71 seconds (29.90 minutes).
+
+=== Iteration 19 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.7053
+Training Validation Loss: 0.0520
+Training Loss: 2.7573
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 19 took 1832.12 seconds (30.54 minutes).
+
+=== Iteration 20 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6273
+Training Validation Loss: 0.0333
+Training Loss: 2.6606
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 20 took 1872.20 seconds (31.20 minutes).
+
+=== Iteration 21 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6332
+Training Validation Loss: 0.0428
+Training Loss: 2.6760
+Evaluating... ARENA (10 games): WWWWWWWWWW | Result: 10/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 21 took 1775.45 seconds (29.59 minutes).
+
+=== Iteration 22 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6231
+Training Validation Loss: 0.0431
+Training Loss: 2.6662
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 22 took 1780.97 seconds (29.68 minutes).
+
+=== Iteration 23 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.5694
+Training Validation Loss: 0.0426
+Training Loss: 2.6119
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 23 took 1885.50 seconds (31.42 minutes).
+
+=== Iteration 24 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6234
+Training Validation Loss: 0.0337
+Training Loss: 2.6571
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 24 took 1845.37 seconds (30.76 minutes).
+
+=== Iteration 25 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.5445
+Training Validation Loss: 0.0327
+Training Loss: 2.5772
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 25 took 1773.24 seconds (29.55 minutes).
+
+=== Iteration 26 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6717
+Training Validation Loss: 0.0490
+Training Loss: 2.7207
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 26 took 1811.51 seconds (30.19 minutes).
+
+=== Iteration 27 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6682
+Training Validation Loss: 0.0555
+Training Loss: 2.7237
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 27 took 1793.49 seconds (29.89 minutes).
+
+=== Iteration 28 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.5874
+Training Validation Loss: 0.0309
+Training Loss: 2.6182
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 28 took 1829.14 seconds (30.49 minutes).
+
+=== Iteration 29 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6381
+Training Validation Loss: 0.0335
+Training Loss: 2.6717
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 29 took 1679.39 seconds (27.99 minutes).
+
+=== Iteration 30 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6315
+Training Validation Loss: 0.0374
+Training Loss: 2.6690
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 30 took 1805.47 seconds (30.09 minutes).
+
+=== Iteration 31 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6634
+Training Validation Loss: 0.0412
+Training Loss: 2.7046
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 31 took 1764.47 seconds (29.41 minutes).
+
+=== Iteration 32 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6156
+Training Validation Loss: 0.0383
+Training Loss: 2.6539
+Evaluating... ARENA (10 games): WWWWWWWWWW | Result: 10/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 32 took 1833.87 seconds (30.56 minutes).
+
+=== Iteration 33 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.5579
+Training Validation Loss: 0.0335
+Training Loss: 2.5914
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 33 took 1793.17 seconds (29.89 minutes).
+
+=== Iteration 34 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.7980
+Training Validation Loss: 0.0263
+Training Loss: 2.8243
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 34 took 1812.53 seconds (30.21 minutes).
+
+=== Iteration 35 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6621
+Training Validation Loss: 0.0423
+Training Loss: 2.7043
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 35 took 1725.60 seconds (28.76 minutes).
+
+=== Iteration 36 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.7243
+Training Validation Loss: 0.0325
+Training Loss: 2.7567
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 36 took 1861.38 seconds (31.02 minutes).
+
+=== Iteration 37 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6926
+Training Validation Loss: 0.0248
+Training Loss: 2.7174
+Evaluating... ARENA (10 games): WWWWWWWWWW | Result: 10/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 37 took 1762.21 seconds (29.37 minutes).
+
+=== Iteration 38 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6532
+Training Validation Loss: 0.0366
+Training Loss: 2.6898
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 38 took 1831.07 seconds (30.52 minutes).
+
+=== Iteration 39 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6739
+Training Validation Loss: 0.0520
+Training Loss: 2.7259
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 39 took 1731.24 seconds (28.85 minutes).
+
+=== Iteration 40 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.5079
+Training Validation Loss: 0.0302
+Training Loss: 2.5381
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 40 took 1760.80 seconds (29.35 minutes).
+
+=== Iteration 41 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.5605
+Training Validation Loss: 0.0316
+Training Loss: 2.5921
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 41 took 1838.57 seconds (30.64 minutes).
+
+=== Iteration 42 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6623
+Training Validation Loss: 0.0284
+Training Loss: 2.6907
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 42 took 1756.12 seconds (29.27 minutes).
+
+=== Iteration 43 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.7908
+Training Validation Loss: 0.0457
+Training Loss: 2.8365
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 43 took 1542.69 seconds (25.71 minutes).
+
+=== Iteration 44 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6935
+Training Validation Loss: 0.0421
+Training Loss: 2.7357
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 44 took 1714.91 seconds (28.58 minutes).
+
+=== Iteration 45 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6777
+Training Validation Loss: 0.0322
+Training Loss: 2.7099
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 45 took 1736.15 seconds (28.94 minutes).
+
+=== Iteration 46 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6214
+Training Validation Loss: 0.0428
+Training Loss: 2.6643
+Evaluating... ARENA (10 games): WWWWWWWWWW | Result: 10/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 46 took 1683.40 seconds (28.06 minutes).
+
+=== Iteration 47 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6819
+Training Validation Loss: 0.0429
+Training Loss: 2.7248
+Evaluating... ARENA (10 games): WWWWWWWWWW | Result: 10/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 47 took 1728.27 seconds (28.80 minutes).
+
+=== Iteration 48 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6157
+Training Validation Loss: 0.0377
+Training Loss: 2.6534
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 48 took 1721.80 seconds (28.70 minutes).
+
+=== Iteration 49 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.5995
+Training Validation Loss: 0.0438
+Training Loss: 2.6432
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 49 took 1671.88 seconds (27.86 minutes).
+
+=== Iteration 50 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 2.6462
+Training Validation Loss: 0.0381
+Training Loss: 2.6843
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 50 took 1674.27 seconds (27.90 minutes).

@@ -78,10 +78,16 @@ class Game:
         self.player1 = player1
         self.player2 = player2
 
-        self.players = {
-            Colour.RED: self.player1,
-            Colour.BLUE: self.player2,
-        }
+        if self.player1.agent.opp_colour() == Colour.BLUE:
+            self.players = {
+                Colour.RED: self.player1,
+                Colour.BLUE: self.player2,
+            }
+        else:
+            self.players = {
+                Colour.RED: self.player2,
+                Colour.BLUE: self.player1,
+            }
         # logger.setLevel(logging.DEBUG)
 
         if verbose:

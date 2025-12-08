@@ -89,17 +89,17 @@ class DeepLearningAgent(AgentBase):
         # 1. Run MCTS Simulations
         # For a real game, you might want 100-200 simulations if time permits.
         # For now, 50 is fast and safe.
-        simulations = 100
+        simulations = 200
         
         
         # 2. Get the move probabilities (Temperature=0 for competitive play)
         # We copy inside MCTS, so just pass the board
-        probs = self.mcts.get_action_prob(board, temp=0, simulations=simulations)
+        probs = self.mcts.get_action_prob(board, temp=0.01, simulations=simulations)
         best_action_index = np.argmax(probs)
         
         # 3. Convert Index to (Row, Col)
         
         row = best_action_index // self._board_size
         col = best_action_index % self._board_size
-            
+
         return Move(row, col)
