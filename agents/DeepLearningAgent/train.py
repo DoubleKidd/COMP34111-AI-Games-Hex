@@ -242,9 +242,9 @@ class AlphaZeroTrainer:
         
         print(f" | Result: {wins}/{num_games}")
         
-        # Threshold: Win 60% (6 out of 10) to replace champion
+        # Threshold: Win 90% (9 out of 10) to replace champion
         win_rate = wins / num_games
-        return win_rate >= 0.6
+        return win_rate >= 0.9
 
     def save_model_safely(self):
         """Atomic save to prevent corruption"""
@@ -347,7 +347,7 @@ class AlphaZeroTrainer:
             # 3. ARENA EVALUATION
             # We skip arena for the very first iteration if no model exists
             print("Evaluating...", end=" ")
-            if self.evaluate_model(num_games=10):
+            if self.evaluate_model(num_games=6):
                 print(">>> CHALLENGER WON! Accepting new weights.")
                 self.save_model_safely()
             else:
@@ -374,4 +374,4 @@ if __name__ == "__main__":
 
     # For test
     trainer = AlphaZeroTrainer(board_size=11, simulations=100, cpu_ct=1.1, temp=1.1)
-    trainer.train(num_iterations=200, episodes_per_iter=20, epochs=5)
+    trainer.train(num_iteratiofns=200, episodes_per_iter=20, epochs=5)
