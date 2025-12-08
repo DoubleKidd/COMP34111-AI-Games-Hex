@@ -374,4 +374,4 @@ if __name__ == "__main__":
 
     # For test
     trainer = AlphaZeroTrainer(board_size=11, simulations=100, cpu_ct=1.1, temp=1.1)
-    trainer.train(num_iteratiofns=200, episodes_per_iter=20, epochs=5)
+    trainer.train(num_iterations=200, episodes_per_iter=20, epochs=5)
