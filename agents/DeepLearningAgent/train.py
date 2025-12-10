@@ -24,6 +24,7 @@ import copy
 import time
 import random
 import glob
+import re
 
 # This forces PyTorch to use generic math functions instead of 
 # trying to probe the ARM processor hardware (which crashes Docker).
