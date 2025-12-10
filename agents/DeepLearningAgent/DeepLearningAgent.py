@@ -44,7 +44,7 @@ class DeepLearningAgent(AgentBase):
         self.model.eval()
 
         # 3. Initialize MCTS
-        self.mcts = MCTS(self.model, cpu_ct=1.0)
+        self.mcts = MCTS(self.model, cpu_ct=0.1)
 
     def make_move(self, turn: int, board: Board, opp_move: Move | None) -> Move:
         """The game engine will call this method to request a move from the agent.
@@ -89,7 +89,7 @@ class DeepLearningAgent(AgentBase):
         # 1. Run MCTS Simulations
         # For a real game, you might want 100-200 simulations if time permits.
         # For now, 50 is fast and safe.
-        simulations = 200
+        simulations = 500
         
         
         # 2. Get the move probabilities (Temperature=0 for competitive play)
