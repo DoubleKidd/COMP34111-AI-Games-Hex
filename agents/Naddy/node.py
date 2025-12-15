@@ -1,27 +1,33 @@
 from random import random
 from typing import Self
 
-from agents.Naddy.evaluate import action, evaluate
+from agents.Naddy.simulate import action, simulate
 from src.Board import Board
 from src.Colour import Colour
 from src.Move import Move
 
 
 class Node:
-    def __init__(self, state: Board, move: Move = None, colour: Colour = None, parent: Self = None):
+    def __init__(
+        self,
+        state: Board,
+        move: Move = None,
+        colour: Colour = None,
+        parent: Self = None
+    ):
         """Initialise a node."""
         self.state = state
         self.move = move
         self.colour = colour
         self.parent = parent
 
-        self.children: list[Self] = []
+        self.children: set[Self] = set()
         self.visits = 0
         self.reward = 0
         self.expanded = False
 
         self.action_func = action
-        self.evaluate_func = evaluate
+        self.simulate_func = simulate
 
     def has_children(self) -> bool:
         return len(self.children) > 0
@@ -29,34 +35,23 @@ class Node:
     def is_leaf(self) -> bool:
         return len(self.children) == 0 and self.expanded
 
-    def evaluate(self) -> float:
-        """Evaluate the node's state and return its reward."""
-        if self.evaluate_func:
-            self.reward = self.evaluate_func(self.state)
-            return self.reward
+    def simulate(self) -> float:
+        """Simulate from the node's state and return the outcome."""
+        if self.simulate_func:
+            return self.simulate_func(self.state)
         return 0.0
 
     def expand(self) -> list[Self]:
         """Generate child nodes from the current node's state."""
         self.expanded = True
-        if self.action_func:
-            possible_moves = self.action_func(self.state)
+        new_move = self.action_func(self.state)
 
-            for move in possible_moves:
-                new_state = self.state.copy()
-                new_state.set_tile_colour(move.x, move.y, self.colour.opposite())
-                # Create a child for each state
-                child_node = Node(new_state, move=move, colour=self.colour.opposite(), parent=self)
+        new_state = self.state.copy()
+        new_state.set_tile_colour(new_move.x, new_move.y, self.colour.opposite())
+        child_node = Node(new_state, move=new_move, colour=self.colour.opposite(), parent=self)
+        self.children.add(child_node)
 
-                # Evaluate the state
-                child_node.evaluate()
-                self.children.append(child_node)
-
-                # Early stopping for max reward
-                if self.evaluate_func and child_node.reward >= 1:
-                    return self.children  
-
-        return self.children
+        return child_node
 
     def best_child(self, policy_func: callable[[Self], Self]) -> Self | None:
         """Select the best child node based on the tree policy."""
@@ -72,4 +67,4 @@ class Node:
         self.reward += (reward - self.reward) / self.visits
 
         if self.parent:
-            self.parent.backpropagate(reward)
+            self.parent.backpropagate(1 - reward)

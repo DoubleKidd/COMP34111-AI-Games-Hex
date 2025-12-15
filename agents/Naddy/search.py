@@ -31,7 +31,7 @@ def mcts_search(
         node = root
 
         # Immediate win check
-        if node.evaluate() >= win_threshold:
+        if node.reward >= win_threshold:
             logger.debug("Winning state found during initial selection.")
             return node.state
 
@@ -45,18 +45,17 @@ def mcts_search(
 
         # --- EXPANSION ---
         if node is not None and not node.has_children():
-            node.expand()
+            child = node.expand()
 
-            if node.has_children():
-                # Pick a newly expanded child node
-                node = rand_policy(node.children)
-                logger.debug(f"Expanded Node State:\n{node.state}\n")
+            # Pick the newly expanded child node
+            node = rand_policy(child)
+            logger.debug(f"Expanded Node State:\n{node.state}\n")
 
         # --- SIMULATION & BACKPROPAGATION ---
         if node is not None:
-            # Evaluate node state
-            node.evaluate()
-            logger.debug(f"Evaluated State:\n{node.state}\nReward: {node.reward}")
+            # simulate node state
+            node.simulate()
+            logger.debug(f"simulated State:\n{node.state}\nReward: {node.reward}")
 
             # Backpropagation
             node.backpropagate(node.reward)
