@@ -8,15 +8,18 @@ from src.Move import Move
 
 log_dir = Path(__file__).parent / "logs"
 log_file = log_dir / f"mcts_{datetime.now().strftime('%d_%H%M%S')}.log"
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler(log_file),
-        logging.StreamHandler()
-    ]
-)
+
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(asctime)s\n%(message)s')
+file_handler = logging.FileHandler(log_file)
+file_handler.setFormatter(formatter)
+file_handler.setLevel(logging.DEBUG)
+logger.addHandler(file_handler)
+# console_handler = logging.StreamHandler()
+# console_handler.setFormatter(formatter)
+# logger.addHandler(console_handler)
 
 
 def traverse_all(node: Node):
@@ -28,27 +31,27 @@ def traverse_all(node: Node):
     return nodes
 
 
-def mcts_search(
+def mcts(
     root: Node,
+    selection_policy: Callable,
     iterations: int = 50,
-    selection_policy: Callable | None = None,
     discount_factor: float = 0.9,
     win_threshold: float = 1.0,
 ) -> Move:
     """Performs MCTS search and returns the best immediate next move for the AI."""
-    selection_policy = selection_policy or rand_policy
+    logger.info(f"Performing MCTS with {iterations} iterations as {root.colour} on\n{root.state}.")
 
     for _ in range(iterations):
         node = root
 
         # Immediate win check
-        if node.reward >= win_threshold:
-            logger.debug("Winning move found during initial selection.")
-            return node.move
+        # if node.reward >= win_threshold:
+        #     logger.debug("Winning move found during initial selection.")
+        #     return node.move
 
         # --- SELECTION ---
         while node is not None and node.has_children():
-            child = node.best_child(policy_func=selection_policy)
+            child = selection_policy(node)
             if child is None:
                 logger.debug("Selection returned None.")
                 break
@@ -58,30 +61,32 @@ def mcts_search(
             logger.debug("Selection failed to find a node.")
             continue
 
+        logger.debug(f"Selected node move: {node.move}")
+
         # --- EXPANSION ---
         if not node.has_children():
             child = node.expand()
             if child is None:
                 logger.debug("Expansion returned no children (terminal state?).")
                 continue
-            logger.debug(f"Expanded Node State:\n{node.state}\n")
+            logger.debug(f"Expanded node move: {child.move}")
+            logger.debug(f"{child.state}")
         else:
             child = node
 
         # --- SIMULATION ---
-        result = child.simulate()
-        logger.debug(f"Simulated State:\n{child.state}\nResult: {result}")
+        simulation, result = child.simulate()
+        logger.debug(f"Simulated State:\n{simulation}\nResult: {result}")
 
         # --- BACKPROPAGATION ---
         child.backpropagate(result)
-        logger.debug(f"Backpropagated value: {result} to parent nodes.")
+        logger.debug(f"Backpropagated value {result}\nChild reward {child.reward}\nParent reward {child.parent.reward if child.parent else 'None'}.")
 
     # After all iterations, select the best child of the root node
     if root.children:
         best_child = max(root.children, key=lambda c: c.reward)
-        final_move = best_child.move
-        logger.debug(f"Best Move State after search:\n{final_move}")
-        return final_move
+        logger.info(f"Best Move: {best_child.move}\nReward: {best_child.reward}\nVisits: {best_child.visits}")
+        return best_child.move
     else:
         # No moves available, return the root state
         return root.move

@@ -1,8 +1,8 @@
 from copy import deepcopy
-from random import random
-from typing import Self
+import random
+from typing import Callable, Self
 
-from agents.Naddy.simulate import action, actions, simulate
+from agents.Naddy.simulate import action, actions, simulate, state_to_result
 from src.Board import Board
 from src.Colour import Colour
 from src.Move import Move
@@ -14,7 +14,7 @@ class Node:
         state: Board,
         move: Move = None,
         colour: Colour = None,
-        parent: Self = None
+        parent: Self | None = None
     ):
         """Initialise a node."""
         self.state = state
@@ -24,7 +24,7 @@ class Node:
 
         self.children: set[Self] = set()
         self.visits = 0
-        self.reward = 0
+        self.reward = 0.5
         self.expanded = False
 
     def has_children(self) -> bool:
@@ -33,9 +33,11 @@ class Node:
     def is_leaf(self) -> bool:
         return len(self.children) == 0 and self.expanded
 
-    def simulate(self) -> float:
+    def simulate(self) -> tuple[Board, float]:
         """Simulate from the node's state and return the outcome."""
-        return simulate(self.state, self.colour)
+        simulation = simulate(self.state, self.colour)
+        result = state_to_result(simulation, self.colour)
+        return simulation, result
 
     def expand(self) -> Self | None:
         """Generate child nodes from the current node's state."""
@@ -52,12 +54,12 @@ class Node:
 
         return random.choice(list(self.children))
 
-    def best_child(self, policy_func: callable[[Self], Self]) -> Self | None:
+    def best_child(self, policy_func: Callable[[Self], Self]) -> Self | None:
         """Select the best child node based on the tree policy."""
         if not self.children:
             return None  
 
-        return policy_func(self.children)  
+        return policy_func(self.children)
 
     def backpropagate(self, reward: float):
         """Update reward and visits and propagate."""
@@ -67,3 +69,10 @@ class Node:
 
         if self.parent:
             self.parent.backpropagate(1 - reward)
+
+    def visualise_tree(self, depth: int = 0):
+        """Prints a visual representation of the tree from the given node."""
+        indent = "_" * depth
+        print(f"{indent}{self.move}, {self.colour}, R: {self.reward:.2f}, V: {self.visits}")
+        for child in self.children:
+            child.visualise_tree(depth + 1)

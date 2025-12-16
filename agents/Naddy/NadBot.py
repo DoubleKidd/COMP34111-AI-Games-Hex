@@ -1,7 +1,8 @@
 from random import choice
 
 from agents.Naddy.node import Node
-from agents.Naddy.search import mcts_search
+from agents.Naddy.policy import rand_policy
+from agents.Naddy.search import mcts
 from src.AgentBase import AgentBase
 from src.Board import Board
 from src.Colour import Colour
@@ -61,11 +62,16 @@ class NadBot(AgentBase):
 
         current_node = Node(
             state=board,
+            move=opp_move,
+            colour=self.colour,
             parent=previous_node
         )
-        best_move = mcts_search(
-            current_node
+        best_move = mcts(
+            current_node,
+            rand_policy,
+            iterations=10,
         )
+        # current_node.visualise_tree()
 
         # Remove move from choices and return move
         self._choices.remove((best_move.x, best_move.y))

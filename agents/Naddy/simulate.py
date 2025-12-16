@@ -16,13 +16,24 @@ def actions(state: Board) -> Move:
     ]
 
 
-def action(state: Board) -> Move:
+def action(state: Board) -> Move | None:
     """Generates possible moves from the given state."""
-    return random.choice(actions(state))
+    moves = actions(state)
+    return random.choice(moves) if moves != [] else None
 
 
-def simulate(state: Board, colour: Colour, max_moves: int = 200) -> float:
-    """Simulates random playout from the given state and returns reward."""
+def state_to_result(state: Board, colour: Colour) -> bool:
+    """Checks who has won in the given state."""
+    if state.has_ended(colour):
+        return 1.0
+    elif state.has_ended(colour.opposite()):
+        return 0.0
+    else:
+        return 0.5
+
+
+def simulate(state: Board, colour: Colour, max_moves: int = 200) -> Board:
+    """Simulates random playout from the given state and returns final state."""
     sim_state = deepcopy(state)
     current_colour = colour
     moves_made = 0
@@ -38,9 +49,4 @@ def simulate(state: Board, colour: Colour, max_moves: int = 200) -> float:
         current_colour = current_colour.opposite()
         moves_made += 1
 
-    if sim_state.has_ended(colour):
-        return 1.0
-    elif sim_state.has_ended(colour.opposite()):
-        return 0.0
-    else:
-        return 0.5
+    return sim_state
