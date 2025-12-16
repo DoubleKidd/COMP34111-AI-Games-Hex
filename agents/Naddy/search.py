@@ -39,7 +39,7 @@ def mcts(
     win_threshold: float = 1.0,
 ) -> Move:
     """Performs MCTS search and returns the best immediate next move for the AI."""
-    logger.info(f"Performing MCTS with {iterations} iterations as {root.colour.opposite()} on\n{root.state}.")
+    logger.info(f"Performing MCTS with {iterations} iterations as {root.colour.opposite()} on\n{root.state}")
 
     for _ in range(iterations):
         node = root
@@ -62,6 +62,7 @@ def mcts(
             continue
 
         logger.debug(f"Selected node move: {node.move}")
+        logger.debug(f"\n{node.state}")
 
         # --- EXPANSION ---
         if not node.has_children():
@@ -70,7 +71,7 @@ def mcts(
                 logger.debug("Expansion returned no children (terminal state?).")
                 continue
             logger.debug(f"Expanded node move: {child.move}")
-            logger.debug(f"{child.state}")
+            logger.debug(f"\n{child.state}")
         else:
             child = node
 
@@ -80,7 +81,7 @@ def mcts(
 
         # --- BACKPROPAGATION ---
         child.backpropagate(result)
-        logger.debug(f"Backpropagated value {result}\nChild reward {child.reward}\nParent reward {child.parent.reward if child.parent else 'None'}.")
+        logger.debug(f"Backpropagated value {result}\nChild reward {child.reward}\nParent reward {child.parent.reward if child.parent else 'None'}")
 
     # After all iterations, select the best child of the root node
     if root.children:

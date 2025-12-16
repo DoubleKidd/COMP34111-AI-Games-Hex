@@ -69,7 +69,7 @@ class NadBot(AgentBase):
         best_move = mcts(
             current_node,
             rand_policy,
-            iterations=10,
+            iterations=100,
         )
         # current_node.visualise_tree()
 

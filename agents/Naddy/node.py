@@ -35,7 +35,7 @@ class Node:
 
     def simulate(self) -> tuple[Board, float]:
         """Simulate from the node's state and return the outcome."""
-        simulation = simulate(self.state, self.colour)
+        simulation = simulate(self.state, self.colour.opposite())
         result = state_to_result(simulation, self.colour)
         return simulation, result
 

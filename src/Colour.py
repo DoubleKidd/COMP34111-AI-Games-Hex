@@ -12,18 +12,18 @@ class Colour(Enum):
         """Returns the name of the colour as an uppercase character."""
 
         if colour == Colour.RED:
-            return "\033[31m█\033[0m"
+            return "█"
         elif colour == Colour.BLUE:
-            return "\033[34m█\033[0m"
+            return "▒"
         else:
             return "·"
 
     def from_char(c):
         """Returns a colour from its char representations."""
 
-        if c == "\033[31m█\033[0m":
+        if c == "█":
             return Colour.RED
-        elif c == "\033[34m█\033[0m":
+        elif c == "▒":
             return Colour.BLUE
         else:
             return None
