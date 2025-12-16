@@ -174,9 +174,28 @@ class MCTS:
         # Return our game value
         return v
 
+    # def get_board_string(self, board):
+    #     # Creates a unique string for the board state (for the dictionary keys)
+    #     return str(board)
     def get_board_string(self, board):
-        # Creates a unique string for the board state (for the dictionary keys)
-        return str(board)
+        """
+        FAST KEY GENERATION
+        Replaces str(board). Creates a tuple of integers representing the board.
+        Much faster than string manipulation.
+        """
+        flat_board = []
+        for r in range(board.size):
+            row_tiles = board.tiles[r]
+            for t in row_tiles:
+                c = t.colour
+                # Map Colour objects to simple Ints for speed/hashing
+                if c is None: 
+                    flat_board.append(0)
+                elif c == Colour.RED: 
+                    flat_board.append(1)
+                else: 
+                    flat_board.append(2)
+        return tuple(flat_board)
 
     def get_valid_moves_mask(self, board):
         # Returns array of 1s (valid) and 0s (occupied)
@@ -193,26 +212,39 @@ class MCTS:
         policy_2d_T = policy_2d.T
         return policy_2d_T.flatten()
 
-    def clone_board(self, original_board):
-            """
-            Fast manual clone of the board.
-            Bypasses deepcopy by creating a fresh board and manually copying tile states.
-            """
-            # 1. Create a fresh board (this calls __init__, creating blank tiles)
-            new_board = Board(original_board.size)
+    # def clone_board(self, original_board):
+    #         """
+    #         Fast manual clone of the board.
+    #         Bypasses deepcopy by creating a fresh board and manually copying tile states.
+    #         """
+    #         # 1. Create a fresh board (this calls __init__, creating blank tiles)
+    #         new_board = Board(original_board.size)
             
-            # 2. Copy the winner status (if known) so we don't re-calculate it
-            # We access the protected member _winner directly for speed
-            new_board._winner = original_board._winner
+    #         # 2. Copy the winner status (if known) so we don't re-calculate it
+    #         # We access the protected member _winner directly for speed
+    #         new_board._winner = original_board._winner
 
-            # 3. Copy the tile colours
-            # We iterate through the grid and just copy the '.colour' attribute.
-            # This is much faster than pickling/unpickling the whole Tile object.
-            for r in range(original_board.size):
-                for c in range(original_board.size):
-                    # Only set if not None to save even more time
-                    old_colour = original_board.tiles[r][c].colour
-                    if old_colour is not None:
-                        new_board.tiles[r][c].colour = old_colour
+    #         # 3. Copy the tile colours
+    #         # We iterate through the grid and just copy the '.colour' attribute.
+    #         # This is much faster than pickling/unpickling the whole Tile object.
+    #         for r in range(original_board.size):
+    #             for c in range(original_board.size):
+    #                 # Only set if not None to save even more time
+    #                 old_colour = original_board.tiles[r][c].colour
+    #                 if old_colour is not None:
+    #                     new_board.tiles[r][c].colour = old_colour
             
-            return new_board
+    #         return new_board
+    def clone_board(self, original_board):
+        new_board = Board(original_board.size)
+        new_board._winner = original_board._winner
+        
+        # Optimization: Cache row lookups to avoid repeated indexing
+        for r in range(original_board.size):
+            orig_row = original_board.tiles[r]
+            new_row = new_board.tiles[r]
+            for c in range(original_board.size):
+                old_colour = orig_row[c].colour
+                if old_colour is not None:
+                    new_row[c].colour = old_colour
+        return new_board

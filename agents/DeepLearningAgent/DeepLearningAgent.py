@@ -8,6 +8,7 @@ from src.Move import Move
 from agents.DeepLearningAgent.model import AlphaZeroHexNet
 from agents.DeepLearningAgent.mcts import MCTS
 from agents.DeepLearningAgent.utils import encode_board
+from agents.DeepLearningAgent.Solver import HexSolver # Import Solver
 
 class DeepLearningAgent(AgentBase):
     """
@@ -43,8 +44,9 @@ class DeepLearningAgent(AgentBase):
         
         self.model.eval()
 
-        # 3. Initialize MCTS
-        self.mcts = MCTS(self.model, cpu_ct=1.0)
+        # 3. Initialize Utils
+        self.mcts = MCTS(self.model, cpu_ct=0.1)
+        self.solver = HexSolver() # Initialize Solver
 
     def make_move(self, turn: int, board: Board, opp_move: Move | None) -> Move:
         """The game engine will call this method to request a move from the agent.
@@ -84,12 +86,31 @@ class DeepLearningAgent(AgentBase):
             if value.item() < -0.1:
                 return Move(-1, -1) # SWAP
 
-        # --- STANDARD MOVE SELECTION ---
+        # --- 0. SOLVER CHECK (Killer Move) ---
+        # Before thinking hard with MCTS, check if we can win instantly
+        winning_move = self.solver.find_winning_move(board, self.colour)
+        if winning_move:
+            print("Found immediate winning move via minmax solver.")
+            return Move(winning_move[0], winning_move[1])
+        print("No immediate winning move found, proceeding with MCTS.")
+
+        # --- 2. DEFENSE (Saving Throw) ---
+        # "If I do nothing, can the opponent force a win?"
+        opponent_colour = Colour.BLUE if self.colour == Colour.RED else Colour.RED
+        threat_move = self.solver.find_winning_move(board, opponent_colour)
         
+        if threat_move:
+            print(f"Solver: Blocking Opponent Threat at {threat_move}")
+            # We steal the move they wanted to play
+            print(f"Blocking opponent's winning move at {threat_move}")
+            return Move(threat_move[0], threat_move[1])
+        print("No immediate opponent threats detected, proceeding with MCTS.")
+
+        # --- STANDARD MOVE SELECTION ---
         # 1. Run MCTS Simulations
         # For a real game, you might want 100-200 simulations if time permits.
         # For now, 50 is fast and safe.
-        simulations = 200
+        simulations = 500
         
         
         # 2. Get the move probabilities (Temperature=0 for competitive play)
