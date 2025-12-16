@@ -105,23 +105,42 @@ class BridgeBot(AgentBase):
             nx2 = x + x2
             ny2 = y + y2
 
-            if (
-                not self.in_board(nx, ny) or
-                not self.in_board(nx1, ny1) or
-                not self.in_board(nx2, ny2)
-            ):
-                # Bad juju
-                # Check if virtual win!!
-                if self.colour == RED and (ny < 0 or ny >= self._board_size):
-                    return self.close_connections()
-                elif self.colour == BLUE and (nx < 0 or nx >= self._board_size):
-                    return self.close_connections()
+            try:
+                if (
+                    not self.in_board(nx, ny) or
+                    not self.in_board(nx1, ny1) or
+                    not self.in_board(nx2, ny2)
+                ):
+                    # Bad juju
+                    # Check if virtual win!!
+                        if self.colour == RED and (ny < 0 or ny >= self._board_size):
+                            if tiles[nx][ny].colour == None:
+                                return self.close_connections()
+                            else:
+                                return self.returnRandomMove(board)
+                        elif self.colour == BLUE and (nx < 0 or nx >= self._board_size):
+                            if tiles[nx][ny].colour == None:
+                                return self.close_connections()
+                            else:
+                                return self.returnRandomMove(board)
+                        
+                        #Uhoh
+                        else:
+                            # THIS IS ALMOST CERTAINLY WRONG, BUT IT WORKS IN 95% of CASES
+                            if tiles[nx][ny].colour == None:
+                                return self.close_connections()
+                            else:
+                                return self.returnRandomMove(board)
+                elif (
+                    not self.in_board(nx, ny) and
+                    self.in_board(nx1, ny1)
+                ):
+                    if tiles[nx1][ny1].colour == None and tiles[nx2][ny2].colour == None:
+                        self.virtuals.append(((nx1, ny1), (nx2, ny2)))
+                        return self.close_connections()
+            except:
+                return self.returnRandomMove(board)
                 
-                #Uhoh
-                else:
-                    # THIS IS ALMOST CERTAINLY WRONG, BUT IT WORKS IN 95% of CASES
-                    return self.close_connections()
-                    raise Exception
 
             
             # Check if they are all empty
@@ -129,8 +148,28 @@ class BridgeBot(AgentBase):
                 move = Move(nx, ny)
                 self.virtuals.append(((nx1, ny1), (nx2, ny2)))
                 self.anchor = (nx, ny)
-                return move
+                try:
+                    if tiles[nx][ny].colour == None:
+                        return move
+                    else:
+                        move = self.close_connections()
+                        # check if tile is free
+                        if tiles[move.x][move.y].colour == None:
+                            return move
+                        else:
+                            return self.returnRandomMove(board)
+                except:
+                    return self.returnRandomMove(board)
     
+    def returnRandomMove(self, board) -> Move:
+        #  list of available moves in board without using self._choices
+        available_moves = [
+            (i, j) for i in range(self._board_size) for j in range(self._board_size)
+            if board.tiles[i][j].colour is None
+        ]
+        x, y = choice(available_moves)
+        return Move(x, y)
+
     def close_connections(self):
         move = None
         tmplist = []
