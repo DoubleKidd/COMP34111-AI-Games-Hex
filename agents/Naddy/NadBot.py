@@ -63,7 +63,7 @@ class NadBot(AgentBase):
         current_node = Node(
             state=board,
             move=opp_move,
-            colour=self.colour,
+            colour=self.colour.opposite(),
             parent=previous_node
         )
         best_move = mcts(

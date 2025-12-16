@@ -39,7 +39,7 @@ def mcts(
     win_threshold: float = 1.0,
 ) -> Move:
     """Performs MCTS search and returns the best immediate next move for the AI."""
-    logger.info(f"Performing MCTS with {iterations} iterations as {root.colour} on\n{root.state}.")
+    logger.info(f"Performing MCTS with {iterations} iterations as {root.colour.opposite()} on\n{root.state}.")
 
     for _ in range(iterations):
         node = root
