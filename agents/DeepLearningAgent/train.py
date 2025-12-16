@@ -12,11 +12,6 @@ os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
 import numpy as np
 import torch
-# ... rest of your imports ...
-
-
-import numpy as np
-import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 import torch.multiprocessing as mp
@@ -28,14 +23,15 @@ import re
 
 # This forces PyTorch to use generic math functions instead of 
 # trying to probe the ARM processor hardware (which crashes Docker).
-torch.backends.mkldnn.enabled = False
-torch.backends.nnpack.enabled = False
+# torch.backends.mkldnn.enabled = False
+# torch.backends.nnpack.enabled = False
 
 from src.Board import Board
 from src.Colour import Colour
 from agents.DeepLearningAgent.model import AlphaZeroHexNet
 from agents.DeepLearningAgent.mcts import MCTS
 from agents.DeepLearningAgent.utils import encode_board
+from agents.DeepLearningAgent.Solver import HexSolver
 
 # --- STANDALONE ARENA WORKER ---
 def arena_worker(args):
@@ -75,17 +71,38 @@ def arena_worker(args):
         
         turn_colour = Colour.RED
         
+        solver = HexSolver()
+
         while True:
-            # Low temp for Arena (competitive)
-            if turn_colour == Colour.RED:
-                probs = mcts_p1.get_action_prob(board, temp=0.1, simulations=simulations)
-            else:
-                probs = mcts_p2.get_action_prob(board, temp=0.1, simulations=simulations)
+            # --- SOLVER LOGIC (Applied to BOTH players) ---
+            forced_move = None
             
-            # Deterministic move selection for evaluation
-            best_move = np.argmax(probs)
-            row = best_move // board_size
-            col = best_move % board_size
+            # A. Attack: Can current player win now?
+            winning_move = solver.find_winning_move(board, turn_colour)
+            if winning_move:
+                forced_move = winning_move
+            
+            # B. Defense: If not, must they block?
+            if not forced_move:
+                opponent_colour = Colour.BLUE if turn_colour == Colour.RED else Colour.RED
+                threat_move = solver.find_winning_move(board, opponent_colour)
+                if threat_move:
+                    forced_move = threat_move
+
+            # --- EXECUTE MOVE ---
+            if forced_move:
+                # Play the forced move immediately
+                row, col = forced_move
+            else:
+                # No forced move? Use MCTS as normal.
+                if turn_colour == Colour.RED:
+                    probs = mcts_p1.get_action_prob(board, temp=0.1, simulations=simulations)
+                else:
+                    probs = mcts_p2.get_action_prob(board, temp=0.1, simulations=simulations)
+                
+                best_move = np.argmax(probs)
+                row = best_move // board_size
+                col = best_move % board_size
             
             board.set_tile_colour(row, col, turn_colour)
             
@@ -95,7 +112,6 @@ def arena_worker(args):
                 
             turn_colour = Colour.BLUE if turn_colour == Colour.RED else Colour.RED
         
-        # Return 1 if Challenger won, 0 otherwise
         return 1 if winner == challenger_colour else 0
 
     except Exception as e:
@@ -126,6 +142,8 @@ def self_play_worker(args):
         
         local_model.eval()
         
+        solver = HexSolver()
+
         # 2. Setup MCTS
         mcts = MCTS(local_model, cpu_ct=cpu_ct)
         
@@ -135,24 +153,47 @@ def self_play_worker(args):
         current_colour = Colour.RED
         
         while True:
-            # Get action probabilities
-            real_probs = mcts.get_action_prob(board, temp=temp, simulations=simulations) # The real view
+            # --- 1. SOLVER CHECK (Attack & Defense) ---
+            forced_move = None
+            
+            # A. ATTACK
+            winning_move = solver.find_winning_move(board, current_colour)
+            if winning_move:
+                forced_move = winning_move
+                
+            # B. DEFENSE
+            if not forced_move:
+                opponent_colour = Colour.BLUE if current_colour == Colour.RED else Colour.RED
+                threat_move = solver.find_winning_move(board, opponent_colour)
+                if threat_move:
+                    forced_move = threat_move
 
-            # 2. Create a copy for the TRAINING DATA
+            # --- 2. MOVE SELECTION ---
+            if forced_move:
+                # Force the move: 100% probability
+                row, col = forced_move
+                action_index = row * board_size + col
+                
+                real_probs = np.zeros(board_size * board_size, dtype=np.float32)
+                real_probs[action_index] = 1.0
+                
+            else:
+                # Normal MCTS
+                real_probs = mcts.get_action_prob(board, temp=temp, simulations=simulations)
+
+            # --- 3. SAVE TRAINING DATA ---
             train_probs = list(real_probs)
 
-            # If it's Blue's turn, the MCTS returned "Real Board" probabilities (Horizontal).
-            # But we are saving a "Canonical Board" (Vertical).
-            # We must transpose the probs to match the board.
+            # Transpose for Blue (Canonical View)
             if current_colour == Colour.BLUE:
-                # Convert list to numpy, reshape, transpose, flatten, convert back to list
                 probs_np = np.array(real_probs)
                 probs_reshaped = probs_np.reshape(board_size, board_size)
                 train_probs = probs_reshaped.T.flatten().tolist()
             
             canonical_board = encode_board(board, current_colour)
-            train_examples.append([canonical_board, train_probs, current_colour]) # the always vertical view
+            train_examples.append([canonical_board, train_probs, current_colour])
             
+            # Apply Move
             action_index = np.random.choice(len(real_probs), p=real_probs)
             row = action_index // board_size
             col = action_index % board_size
@@ -167,27 +208,14 @@ def self_play_worker(args):
 
         # 4. Format Data
         final_data = []
-        total_moves = len(train_examples)
-        
-        # A decay factor of 0.99 significantly penalizes long games.
-        # Example: Win in 1 move = 0.99 value. Win in 60 moves = 0.54 value.
-        gamma = 0.99 
 
         for i, x in enumerate(train_examples):
             board_state, policy, player = x
             
             # Raw Win/Loss
             raw_value = 1 if player == winner else -1
-            
-            # Calculate moves remaining from THIS state to the end of the game
-            moves_until_end = total_moves - i
-            
-            # Apply decay: 
-            # If winning (1): Value drops from 1.0 -> 0.0 as game gets longer.
-            # If losing (-1): Value rises from -1.0 -> 0.0 as game gets longer (prolonging defeat).
-            time_weighted_value = raw_value * (gamma ** (moves_until_end-board_size))
-            
-            final_data.append((board_state, policy, time_weighted_value))
+
+            final_data.append((board_state, policy, raw_value))
 
         # # 4. Format Data
         # final_data = []
@@ -243,7 +271,7 @@ class AlphaZeroTrainer:
                 # If optimization fails, we just print the error and continue with the standard model
                 print(f"JIT Trace failed (ignoring): {e}")
         # Add 'weight_decay=1e-4' (Standard value for AlphaZero)
-        self.optimizer = optim.Adam(self.model.parameters(), lr=0.001, weight_decay=1e-4)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.0001, weight_decay=1e-4)
         
         self.best_model_path = "agents/DeepLearningAgent/best_model.pth"
 
@@ -331,10 +359,6 @@ class AlphaZeroTrainer:
         # 4. Format Data
         final_data = []
         total_moves = len(train_examples)
-        
-        # A decay factor of 0.99 significantly penalizes long games.
-        # Example: Win in 1 move = 0.99 value. Win in 60 moves = 0.54 value.
-        gamma = 0.99 
 
         for i, x in enumerate(train_examples):
             board_state, policy, player = x
@@ -342,15 +366,8 @@ class AlphaZeroTrainer:
             # Raw Win/Loss
             raw_value = 1 if player == winner else -1
             
-            # Calculate moves remaining from THIS state to the end of the game
-            moves_until_end = total_moves - i
-            
-            # Apply decay: 
-            # If winning (1): Value drops from 1.0 -> 0.0 as game gets longer.
-            # If losing (-1): Value rises from -1.0 -> 0.0 as game gets longer (prolonging defeat).
-            time_weighted_value = raw_value * (gamma ** moves_until_end)
-            
-            final_data.append((board_state, policy, time_weighted_value))
+
+            final_data.append((board_state, policy, raw_value))
 
         # final_data = []
         # for x in train_examples:
@@ -668,5 +685,5 @@ if __name__ == "__main__":
     # trainer.train(num_iterations=1000, episodes_per_iter=10)
 
     # For test
-    trainer = AlphaZeroTrainer(board_size=11, simulations=25, cpu_ct=0.8, temp=1.1)
+    trainer = AlphaZeroTrainer(board_size=11, simulations=100, cpu_ct=0.8, temp=1.1)
     trainer.train(num_iterations=200, episodes_per_iter=32, epochs=5)

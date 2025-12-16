@@ -13,8 +13,10 @@ class Colour(Enum):
 
         if colour == Colour.RED:
             return "\033[31m█\033[0m"
+            # return "R"
         elif colour == Colour.BLUE:
             return "\033[34m█\033[0m"
+            # return "B"
         else:
             return "."
 
@@ -22,8 +24,10 @@ class Colour(Enum):
         """Returns a colour from its char representations."""
 
         if c == "\033[31m█\033[0m":
+        # if c == "R":
             return Colour.RED
         elif c == "\033[34m█\033[0m":
+        # elif c == "B":
             return Colour.BLUE
         else:
             return None
