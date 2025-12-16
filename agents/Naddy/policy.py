@@ -5,7 +5,7 @@ from agents.Naddy.node import Node
 
 def rand_policy(children: list[Node]):
     """Choose a random child node."""
-    return random.choice(children)
+    return random.choice(children) if children != [] else None
 
 
 def best_policy(children: list[Node]):

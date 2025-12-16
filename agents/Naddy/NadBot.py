@@ -59,18 +59,15 @@ class NadBot(AgentBase):
             opponent_move = (opp_move.x, opp_move.y)
             self._choices.remove(opponent_move)
 
-        if turn == 2:
-            return Move(-1, -1)
-        else:
-            current_node = Node(
-                state=board,
-                parent=previous_node
-            )
-            best_move = mcts_search(
-                current_node
-            )
+        current_node = Node(
+            state=board,
+            parent=previous_node
+        )
+        best_move = mcts_search(
+            current_node
+        )
 
-            # Remove move from choices and return move
-            self._choices.remove((best_move.x, best_move.y))
-            previous_node = current_node
-            return best_move
+        # Remove move from choices and return move
+        self._choices.remove((best_move.x, best_move.y))
+        previous_node = current_node
+        return best_move
