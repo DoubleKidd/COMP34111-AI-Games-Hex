@@ -5,6 +5,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 import torch.multiprocessing as mp
 import copy
+import time
 
 from src.Board import Board
 from src.Colour import Colour
@@ -22,7 +23,7 @@ def self_play_worker(args):
         device_name: 'cuda' or 'cpu'
         simulations: Number of MCTS simulations per move
     """
-    model_path, board_size, device_name, simulations = args
+    model_path, board_size, device_name, simulations, cpu_ct, temp = args
     
     # We wrap the whole process in a try/except block to catch errors safely
     try:
@@ -37,7 +38,7 @@ def self_play_worker(args):
         local_model.eval()
         
         # 2. Setup MCTS
-        mcts = MCTS(local_model, cpu_ct=1.0)
+        mcts = MCTS(local_model, cpu_ct=cpu_ct)
         
         # 3. Play Game
         board = Board(board_size=board_size)
@@ -46,8 +47,7 @@ def self_play_worker(args):
         
         while True:
             # Get action probabilities
-            # We hardcode temp=1 for training exploration
-            real_probs = mcts.get_action_prob(board, temp=1, simulations=simulations) # The real view
+            real_probs = mcts.get_action_prob(board, temp=temp, simulations=simulations) # The real view
 
             # 2. Create a copy for the TRAINING DATA
             train_probs = list(real_probs)
@@ -91,23 +91,26 @@ def self_play_worker(args):
         return []
 
 class AlphaZeroTrainer:
-    def __init__(self, board_size=11, simulations=50):
+    def __init__(self, board_size=11, simulations=50, cpu_ct=0.5, temp=0.1):
         self.simulations = simulations
         self.board_size = board_size
+        self.cpu_ct = cpu_ct
+        self.temp = temp
         
         # Detect Mac M2 (MPS) vs CUDA vs CPU
         if torch.backends.mps.is_available():
             self.device = torch.device("mps")
             print(f"Using Apple M2 GPU (MPS) for training.")
-        elif torch.cuda.is_available():
-            self.device = torch.device("cuda")
-            print("Using NVIDIA CUDA for training.")
+        # elif torch.cuda.is_available():
+        #     self.device = torch.device("cuda")
+        #     print("Using NVIDIA CUDA for training.")
         else:
             self.device = torch.device("cpu")
             print("Using CPU for training.")
         
         self.model = AlphaZeroHexNet(board_size=self.board_size).to(self.device)
-        self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
+        # Add 'weight_decay=1e-4' (Standard value for AlphaZero)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.001, weight_decay=1e-4)
         
         self.best_model_path = "agents/DeepLearningAgent/best_model.pth"
         
@@ -124,13 +127,12 @@ class AlphaZeroTrainer:
         Self-Play: Generates training data.
         """
         board = Board(board_size=self.board_size)
-        mcts = MCTS(self.model, cpu_ct=1.0)
+        mcts = MCTS(self.model, cpu_ct=self.cpu_ct)
         train_examples = []
         current_colour = Colour.RED
         
         while True:
-            # temp=1 for exploration during self-play
-            real_probs = mcts.get_action_prob(board, temp=1, simulations=self.simulations)
+            real_probs = mcts.get_action_prob(board, temp=self.temp, simulations=self.simulations)
 
             # 2. Create a copy for the TRAINING DATA
             train_probs = list(real_probs)
@@ -205,8 +207,8 @@ class AlphaZeroTrainer:
                 challenger_colour = Colour.BLUE
             
             # Create fresh MCTS for every game
-            mcts_p1 = MCTS(p1_net, cpu_ct=1.0)
-            mcts_p2 = MCTS(p2_net, cpu_ct=1.0)
+            mcts_p1 = MCTS(p1_net, cpu_ct=self.cpu_ct)
+            mcts_p2 = MCTS(p2_net, cpu_ct=self.cpu_ct)
             
             board = Board(self.board_size)
             turn_colour = Colour.RED
@@ -240,9 +242,9 @@ class AlphaZeroTrainer:
         
         print(f" | Result: {wins}/{num_games}")
         
-        # Threshold: Win 50% (5 out of 10) to replace champion
+        # Threshold: Win 60% (6 out of 10) to replace champion
         win_rate = wins / num_games
-        return win_rate >= 0.5
+        return win_rate >= 0.6
 
     def save_model_safely(self):
         """Atomic save to prevent corruption"""
@@ -264,7 +266,7 @@ class AlphaZeroTrainer:
     #         print(" Done!")
             
     #         if not iteration_examples: continue
-    def train(self, num_iterations=1000, episodes_per_iter=50):
+    def train(self, num_iterations=1000, episodes_per_iter=50, epochs=10):
         # 1. SETUP MULTIPROCESSING
         try:
             mp.set_start_method('spawn', force=True)
@@ -275,6 +277,7 @@ class AlphaZeroTrainer:
         worker_model_path = "agents/DeepLearningAgent/worker_temp.pth"
 
         for i in range(num_iterations):
+            iter_start_time = time.time()  # <--- START TIMER
             print(f"\n=== Iteration {i+1} ===")
             
             # 2. SAVE WEIGHTS TO DISK (The Safe Handoff)
@@ -284,14 +287,14 @@ class AlphaZeroTrainer:
             dev_name = "cuda" if torch.cuda.is_available() else "cpu"
             
             # Pass the FILENAME, not the weights dict
-            task_args = (worker_model_path, self.board_size, dev_name, self.simulations)
+            task_args = (worker_model_path, self.board_size, dev_name, self.simulations, self.cpu_ct, self.temp)
             tasks = [task_args for _ in range(episodes_per_iter)]
             
             iteration_examples = []
             print(f"Self-Playing (Parallel)...", end=" ", flush=True)
             
             # 3. RUN WORKERS
-            num_workers = 10
+            num_workers = 1
             
             with mp.Pool(processes=num_workers) as pool:
                 # Use imap_unordered instead of map
@@ -314,19 +317,31 @@ class AlphaZeroTrainer:
             dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
             
             self.model.train()
-            total_loss = 0
-            for b, p_target, v_target in dataloader:
-                self.optimizer.zero_grad()
-                p_pred, v_pred = self.model(b)
-                
-                loss_v = torch.mean((v_target - v_pred.view(-1)) ** 2)
-                loss_p = -torch.sum(p_target * p_pred) / p_target.size(0)
-                loss = loss_v + loss_p
-                
-                loss.backward()
-                self.optimizer.step()
-                total_loss += loss.item()
+
+            # In train.py, inside the train() method...
+
+
+            # NEW: Run 10 epochs
+            for epoch in range(epochs): 
+                total_loss = 0
+                total_policy_loss = 0
+                total_validation_loss = 0
+                for b, p_target, v_target in dataloader:
+                    self.optimizer.zero_grad()
+                    p_pred, v_pred = self.model(b)
+                    
+                    loss_v = torch.mean((v_target - v_pred.view(-1)) ** 2)
+                    loss_p = -torch.sum(p_target * p_pred) / p_target.size(0)
+                    loss = loss_v + loss_p
+                    total_policy_loss += loss_p
+                    total_validation_loss += loss_v
+                    
+                    loss.backward()
+                    self.optimizer.step()
+                    total_loss += loss.item()
             
+            print(f"Training Policy Loss: {total_policy_loss / len(dataloader):.4f}")
+            print(f"Training Validation Loss: {total_validation_loss / len(dataloader):.4f}")
             print(f"Training Loss: {total_loss / len(dataloader):.4f}")
             
             # 3. ARENA EVALUATION
@@ -339,6 +354,8 @@ class AlphaZeroTrainer:
                 print(">>> CHALLENGER LOST. Discarding weights.")
                 # Reload the previous best weights to forget the bad training
                 self.model.load_state_dict(torch.load(self.best_model_path, map_location=self.device, weights_only=True))
+            elapsed = time.time() - iter_start_time
+            print(f"Iteration {i+1} took {elapsed:.2f} seconds ({elapsed/60:.2f} minutes).")
 
 
 
@@ -348,9 +365,13 @@ if __name__ == "__main__":
     # NOTE: Set board_size=11 for the real run!
     # Decrease episodes_per_iter if it's too slow on CPU
     # trainer = AlphaZeroTrainer(board_size=6)
-    trainer = AlphaZeroTrainer(board_size=11, simulations=100)
+    # trainer = AlphaZeroTrainer(board_size=11, simulations=100)
     # trainer.train(num_iterations=1000, episodes_per_iter=100)
     # trainer.train(num_iterations=100, episodes_per_iter=20)
-    trainer.train(num_iterations=200, episodes_per_iter=50)
+    # trainer.train(num_iterations=200, episodes_per_iter=50)
     # increasing or decreasing episodes per iter increases/decreases parrallelism. Use high values for gpu usage.
     # trainer.train(num_iterations=1000, episodes_per_iter=10)
+
+    # For test
+    trainer = AlphaZeroTrainer(board_size=11, simulations=100, cpu_ct=1.1, temp=1.1)
+    trainer.train(num_iterations=200, episodes_per_iter=20, epochs=5)

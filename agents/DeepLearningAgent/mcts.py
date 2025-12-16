@@ -68,7 +68,7 @@ class MCTS:
             # Therefore, the current player has lost (-1).
             return -1
 
-        # --- STEP 2: EXPANSION (Leaf Node) ---
+        # --- STEP 2: EXPANSION (Not previously seen node) ---
         if s not in self.Ps:
             # 2a. Determine whose turn it is (for Encoding)
             # Count stones to find turn
@@ -140,12 +140,12 @@ class MCTS:
         row = a // board.size
         col = a % board.size
         
-        # Recalculate turn colour
+        # Calculate turn colour
         red_count = sum(1 for row in board.tiles for t in row if t.colour == Colour.RED)
         blue_count = sum(1 for row in board.tiles for t in row if t.colour == Colour.BLUE)
         current_colour = Colour.RED if red_count == blue_count else Colour.BLUE
 
-        # TRANSFORM COORDINATES IF NEEDED
+        # TRANSFORM COORDINATES IF NEEDED - This is nolonger used as coordinates are stransformed when the policy is first retrieved, instead of here.
         # The Network thinks it's playing Red (Top-Bottom).
         # If we are Blue, the move (row, col) the network chose is actually (col, row) on the real board.
         # if current_colour == Colour.BLUE:
@@ -157,7 +157,8 @@ class MCTS:
         board.set_tile_colour(row, col, current_colour)
 
         # RECURSE deeper
-        v = self.search(board)
+        # We use a negative here, as the value score of the next turn, is the opponents result, which is my loss.
+        v = -self.search(board)
 
         # --- STEP 5: BACKPROPAGATION ---
         # Update Q and N
@@ -170,8 +171,8 @@ class MCTS:
             
         self.Ns[s] += 1
         
-        # Return negative value (because the opponent's gain is my loss)
-        return -v
+        # Return our game value
+        return v
 
     def get_board_string(self, board):
         # Creates a unique string for the board state (for the dictionary keys)

@@ -87,38 +87,25 @@ if __name__ == "__main__":
 
     for i in range(args.repeat):
         print(f"Starting game {i + 1}")
-
-        if player1_red:
-            g = Game(
-                player1=Player(
-                    name=args.player1Name,
-                    agent=getattr(p1, p1_class)(Colour.RED),
-                ),
-                player2=Player(
-                    name=args.player2Name,
-                    agent=getattr(p2, p2_class)(Colour.BLUE),
-                ),
-                board_size=args.board_size,
-                logDest=args.log,
-                verbose=args.verbose,
-            )
+        if i % 2 == 1:
+            p1_colour = Colour.RED
+            p2_colour = Colour.BLUE
         else:
-            g = Game(
-                player1=Player(
-                    name=args.player1Name,
-                    agent=getattr(p1, p1_class)(Colour.RED),
-                ),
-                player2=Player(
-                    name=args.player2Name,
-                    agent=getattr(p2, p2_class)(Colour.BLUE),
-                ),
-                board_size=args.board_size,
-                logDest=args.log,
-                verbose=args.verbose,
-            )
-
-        player1_red = not player1_red
-
+            p1_colour = Colour.BLUE
+            p2_colour = Colour.RED
+        g = Game(
+            player1=Player(
+                name=args.player1Name,
+                agent=getattr(p1, p1_class)(p1_colour),
+            ),
+            player2=Player(
+                name=args.player2Name,
+                agent=getattr(p2, p2_class)(p2_colour),
+            ),
+            board_size=args.board_size,
+            logDest=args.log,
+            verbose=args.verbose,
+        )
         g.run()
         
         winning_colour = g.board.get_winner()
