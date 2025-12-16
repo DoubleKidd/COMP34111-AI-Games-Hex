@@ -1,0 +1,669 @@
+\documentclass[11pt,a4paper]{article}
+
+% ====== Packages ======
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{todonotes}
+
+\newcommand\mytodo[2][]{\todo[inline, color=green!20, caption={2do}, #1]{
+\begin{minipage}{\textwidth-4pt}#2\end{minipage}}}
+
+\setstretch{1.15}
+
+% ====== Metadata ======
+\title{COMP34111 - Journal Report}
+% \author{%
+%   % Replace with your details
+%   Your Name (Student ID: 12345678)\\
+%   Group: X
+% }
+% \date{Academic Year 2025--26}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Submission Information}
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Course:} COMP34111
+  \item \textbf{Academic Year:} 2025--26
+  \item \textbf{Student Name:} \mytodo{Benjamin H Kidd}
+  \item \textbf{Student ID:} \mytodo{11019777}
+  \item \textbf{Group:} \mytodo{Your Group Number}
+  \item \textbf{Deadline:} 19th December, 2pm
+  \item \textbf{Note:} Each student must submit their own copy. No anonymous submissions.
+\end{itemize}
+
+\bigskip
+
+\newpage
+% ==========================================================
+% PART 1 – INDIVIDUAL CONTRIBUTION & REFLECTION (20%)
+% ==========================================================
+\section{Individual Contribution and Reflection (20\%)}
+% Explain what you have done and reflect on how the group work is going.
+% Remember: other group members will read this.
+% Focus on:
+% - What you personally did
+% - How you collaborated
+% - What went well / not so well
+% - What you plan to improve
+
+\subsection{Summary of My Contributions}
+% Replace the text below with your own content.
+\mytodo{In this section, describe clearly and honestly what \textbf{you} have done for the project so far.  Mention specific tasks, responsibilities, and any deliverables you produced.}
+
+\subsection{Reflection on Group Work}
+% Replace the text below with your own content.
+\mytodo{
+Reflect on how the group is functioning:
+\begin{itemize}[leftmargin=1.5em]
+  \item Communication within the group
+  \item How meetings are organised and run
+  \item How fairly work is divided
+  \item Any challenges and how you are addressing them
+\end{itemize}
+
+You should be honest but constructive, bearing in mind that other group members may read this.
+}
+
+\subsection{Personal Development}
+% Optional but useful reflection sub-section.
+\mytodo{
+Comment on:
+\begin{itemize}[leftmargin=1.5em]
+  \item Skills you are developing (technical, organisational, communication, etc.)
+  \item What you have learned about working in a team
+  \item How you plan to improve your contribution in the next phase
+\end{itemize}
+}
+
+% ==========================================================
+% PART 2 – GROUP MEETING LOG (30%)
+% ==========================================================
+\section{Group Meeting Log (30\%)}
+% This section should record EVERY group meeting.
+% For each meeting include:
+% - Time, date, location
+% - Members present
+% - Apologies for absence
+% - List of tasks agreed (who does what, and by when)
+% - Brief rationale for decisions
+
+% You can either:
+% 1) Duplicate the "Meeting Template" subsection below for each meeting, OR
+% 2) Use the long table that follows for a compact overview.
+
+\subsection*{Log}
+\mytodo{
+
+\subsection{Meeting Template (example structure)}
+% Copy-paste this sub-section for every meeting and fill it in.
+
+\subsubsection*{Meeting \#1}
+\textbf{Date:} DD/MM/YYYY \\
+\textbf{Time:} HH:MM--HH:MM \\
+\textbf{Location:} Room / Online Platform
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Member A (Student ID)
+  \item Member B (Student ID)
+  \item Member C (Student ID)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item Member X (reason, if known)
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+Use the following format to list tasks assigned during the meeting.
+% For clarity, use a table.
+
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+\toprule
+\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
+\midrule
+T1 & Ben & 12/12 & Utilize an Alpha Zero Approach, using MCTS \& Deep Learning. \\
+T2 & Daniel & 09/12 & Evalutation function. \\
+T3 & Daniel & 12/12 & Alpha Beta. \\
+T4 & Naddy \& David & 12/12 & Manual MCTS (Policy Selection, etc). \\
+% Add more rows as needed
+\bottomrule
+\end{tabularx}
+
+\vspace{0.5em}
+If a task is assigned to someone absent, that person should update this log and add when they agree to do it.
+
+\paragraph{Rationale for Decisions}
+
+
+Briefly explain what led to the decisions taken at this meeting. For example:
+\begin{itemize}[leftmargin=1.5em]
+  \item Why particular tasks were prioritised
+  \item Any alternatives considered
+  \item How the group reached agreement
+\end{itemize}
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#1}
+\textbf{Date:} 21/11/2025 \\
+\textbf{Time:} 10:00--12:30 \\
+\textbf{Location:} Room (Tootil)
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777)
+  \item Naddy (11011468)
+  \item David (11054893)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item None
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+Use the following format to list tasks assigned during the meeting.
+% For clarity, use a table.
+
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+\toprule
+\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
+\midrule
+T1 & Ben & 12/12 & Utilize an Alpha Zero Approach, using MCTS \& Deep Learning. \\
+T2 & Daniel & 09/12 & Evalutation function. \\
+T3 & Daniel & 12/12 & Alpha Beta. \\
+T4 & Naddy \& David & 12/12 & Manual MCTS (Policy Selection, etc). \\
+% Add more rows as needed
+\bottomrule
+\end{tabularx}
+
+\paragraph{Rationale for Decisions}
+Briefly explain what led to the decisions taken at this meeting. For example:
+\begin{itemize}[leftmargin=1.5em]
+  \item Seperating individual approaches allowed for the most parralelisation of work.
+  \item We felt that within the unit, the main approaches avaliable were AlphaBeta (MinMax), MCTS and AlphaGo (AlphaZero), which could be expanded on using other approaches. We decided to attempt all of these, and then evalutate which performed the best at the end.
+  \item Tasks were divided based on interest and location. David and Naddy live together so it made sence for them to share MCTS. This was considered the largest task, and most important as it could utilise approaches from others (e.g. evalutation functions, trained neural networks).
+\end{itemize}
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#2}
+\textbf{Date:} 25/11/2025 \\
+\textbf{Time:} 13:00--15:00 \\
+\textbf{Location:} Room (Tootil)
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777)
+  \item Naddy (11011468)
+  \item David (11054893)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item None
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+Use the following format to list tasks assigned during the meeting.
+% For clarity, use a table.
+
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+\toprule
+\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
+\midrule
+T1 & Member A & DD/MM & Short description of the task \\
+T2 & Member B & DD/MM & Short description of the task \\
+T3 & Member C & DD/MM & Short description of the task \\
+% Add more rows as needed
+\bottomrule
+\end{tabularx}
+
+\paragraph{Rationale for Decisions}
+Briefly explain what led to the decisions taken at this meeting. For example:
+\begin{itemize}[leftmargin=1.5em]
+  \item Why particular tasks were prioritised
+  \item Any alternatives considered
+  \item How the group reached agreement
+\end{itemize}
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#3}
+\textbf{Date:} 28/11/2025 \\
+\textbf{Time:} 10:00--13:00 \\
+\textbf{Location:} Room (Tootil)
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777)
+  \item Naddy (11011468)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item David (11054893), Another coursework submission (NLP).
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+None (Collectively wrote and submitted the group performa).
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#4}
+\textbf{Date:} 02/12/2025 \\
+\textbf{Time:} 13:00--15:00 \\
+\textbf{Location:} Room (Tootil)
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777)
+  \item Naddy (11011468)
+  \item David (11054893)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item None
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+Use the following format to list tasks assigned during the meeting.
+% For clarity, use a table.
+
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+\toprule
+\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
+\midrule
+T1 & Member A & DD/MM & Short description of the task \\
+T2 & Member B & DD/MM & Short description of the task \\
+T3 & Member C & DD/MM & Short description of the task \\
+% Add more rows as needed
+\bottomrule
+\end{tabularx}
+
+\paragraph{Rationale for Decisions}
+Briefly explain what led to the decisions taken at this meeting. For example:
+\begin{itemize}[leftmargin=1.5em]
+  \item Why particular tasks were prioritised
+  \item Any alternatives considered
+  \item How the group reached agreement
+\end{itemize}
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#5}
+\textbf{Date:} 05/12/2026 \\
+\textbf{Time:} 10:00--12:00 \\
+\textbf{Location:} Room (Tootil)
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777)
+  \item Naddy (11011468)
+  \item David (11054893)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item None
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+None (Collectively wrote the group powerpoint).
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#6}
+\textbf{Date:} 08/12/2025 \\
+\textbf{Time:} 13:00--15:00 \\
+\textbf{Location:} Hybrid, Kilburn and Discord
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777)
+  \item Naddy (11011468)
+  \item David (11054893)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item None
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+None (Finalised and practiced group powerpoint).
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#7}
+\textbf{Date:} 09/12/2025 \\
+\textbf{Time:} 13:00--15:00 \\
+\textbf{Location:} Room (Tootil)
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Naddy (11011468)
+  \item David (11054893)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777), CGI Assessment Centre.
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+Use the following format to list tasks assigned during the meeting.
+% For clarity, use a table.
+
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+\toprule
+\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
+\midrule
+T1 & Member A & DD/MM & Short description of the task \\
+T2 & Member B & DD/MM & Short description of the task \\
+T3 & Member C & DD/MM & Short description of the task \\
+% Add more rows as needed
+\bottomrule
+\end{tabularx}
+
+
+\paragraph{Rationale for Decisions}
+Briefly explain what led to the decisions taken at this meeting. For example:
+\begin{itemize}[leftmargin=1.5em]
+  \item Why particular tasks were prioritised
+  \item Any alternatives considered
+  \item How the group reached agreement
+\end{itemize}
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#8}
+\textbf{Date:} 12/12/2025 \\
+\textbf{Time:} 10:00--13:00 \\
+\textbf{Location:} Room (Tootil)
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777)
+  \item Naddy (11011468)
+  \item David (11054893)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item None.
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+Use the following format to list tasks assigned during the meeting.
+% For clarity, use a table.
+
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+\toprule
+\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
+\midrule
+T1 & Member A & DD/MM & Short description of the task \\
+T2 & Member B & DD/MM & Short description of the task \\
+T3 & Member C & DD/MM & Short description of the task \\
+% Add more rows as needed
+\bottomrule
+\end{tabularx}
+
+
+\paragraph{Rationale for Decisions}
+Briefly explain what led to the decisions taken at this meeting. For example:
+\begin{itemize}[leftmargin=1.5em]
+  \item Why particular tasks were prioritised
+  \item Any alternatives considered
+  \item How the group reached agreement
+\end{itemize}
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#9}
+\textbf{Date:} 15/12/2025 \\
+\textbf{Time:} 13:00--15:00 \\
+\textbf{Location:} Room (Tootil)
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777)
+  \item Naddy (11011468)
+  \item David (11054893)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item None.
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+Use the following format to list tasks assigned during the meeting.
+% For clarity, use a table.
+
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+\toprule
+\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
+\midrule
+T1 & Ben (1101977) & 18/12 & Complete their journal version \\
+T2 & Naddy (11011468) & 18/12 & Complete their journal version \\
+T3 & David (11054893) & 18/12 & Complete their journal version \\
+T4 & Daniel (11017362) & 18/12 & Complete their journal version \\
+\bottomrule
+\end{tabularx}
+
+
+\paragraph{Rationale for Decisions}
+Decision made to submit XXXX bot
+}
+
+\bigskip
+
+\mytodo{
+
+\subsubsection*{Meeting \#10}
+\textbf{Date:} 18/12/2025 \\
+\textbf{Time:} 12:00--14:00 \\
+\textbf{Location:} Room (Tootil)
+
+\paragraph{Members Present}
+\begin{itemize}[leftmargin=1.5em]
+  \item Ben (11019777)
+  \item Naddy (11011468)
+  \item David (11054893)
+  \item Daniel (11017362)
+  % etc.
+\end{itemize}
+
+\paragraph{Apologies for Absence}
+\begin{itemize}[leftmargin=1.5em]
+  \item None.
+  % If no apologies, write: None.
+\end{itemize}
+
+\paragraph{Tasks Agreed}
+None (Collectively finalised project).
+}
+
+\bigskip
+
+% ---------- Optional: Compact Summary Table of All Meetings ----------
+\subsection{Compact Summary of Meetings (Optional)}
+% You can use this as an overview of all meetings, in addition to the detailed templates above.
+
+\setlength{\extrarowheight}{2pt}
+\begin{longtable}{@{}p{2.8cm} p{3.5cm} p{3cm} p{5.5cm}@{}}
+\caption{Summary of Group Meetings} \\
+\toprule
+\textbf{Date \& Time} & \textbf{Location} & \textbf{Members Present} & \textbf{Main Outcomes / Tasks} \\
+\midrule
+\endfirsthead
+
+\toprule
+\textbf{Date \& Time} & \textbf{Location} & \textbf{Members Present} & \textbf{Main Outcomes / Tasks} \\
+\midrule
+\endhead
+
+% ---- Example rows (delete or overwrite) ----
+21/11/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Defined Individual Approaches. \\
+25/11/2025, 13:00 & Room & Ben, Naddy, David, Daniel & Started work on current approaches, discussed methods of implementation. \\
+28/11/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Submitted Performa and continued work on current approaches, updated teammates on progress. \\
+2/12/2025, 13:00 & Room & Ben, Naddy, Daniel & Continued work on current approaches, updated teammates on progress. Decided to remove Alpha Beta from scope. \\
+05/12/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Created Powerpoint. \\
+08/12/2025, 13:00 & Hybrid & Ben, Naddy, David, Daniel & Finalised and Practiced Powerpoint \\
+09/12/2025, 13:00 & Room & Naddy, David, Daniel & Continued work on current approaches, updated teammates on progress. \\
+12/12/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Continued work on current approaches, updated teammates on progress. \\
+15/12/2025, 13:00 & Hybrid & Ben, Naddy, David, Daniel & Compared bots and finlised log \\
+18/12/2025, 12:00 & Hybrid & Ben, Naddy, David, Daniel & Finalised everything for submission \\
+% Add more rows as needed
+
+\bottomrule
+\end{longtable}
+
+% ==========================================================
+% PART 3 – BOT METHOD & SIGNATURES (50%)
+% ==========================================================
+\section{Bot Method and Unique Strengths (50\%)}
+% This section is about the QUALITY of the approach you attempted.
+% State:
+% - What method the bot used
+% - Design choices and architecture
+% - Unique aspects that made it strong and powerful
+
+\subsection{Method Overview}
+\mytodo{
+Describe what method your bot used. For example:
+\begin{itemize}[leftmargin=1.5em]
+  \item Algorithm(s) or model(s) used
+  \item High-level architecture
+  \item How the components interact
+\end{itemize}
+}
+
+\subsection{Technical Details}
+\mytodo{
+Provide more detail here, such as:
+\begin{itemize}[leftmargin=1.5em]
+  \item Input representation and features
+  \item Training, tuning, or rule design
+  \item Any libraries, frameworks, or tools used
+  \item Evaluation strategy and results
+\end{itemize}
+}
+
+\subsection{Unique Aspects and Strengths}
+\mytodo{
+Explain what made your bot \emph{strong and powerful}:
+\begin{itemize}[leftmargin=1.5em]
+  \item Novel ideas or design decisions
+  \item Strengths compared to a baseline or naive approach
+  \item Robustness, efficiency, scalability, etc.
+\end{itemize}
+}
+
+\subsection{Limitations and Possible Improvements}
+\mytodo{
+Briefly acknowledge:
+\begin{itemize}[leftmargin=1.5em]
+  \item Known weaknesses or failure cases
+  \item Improvements you would make with more time
+\end{itemize}
+}
+
+% ---------- Signatures ----------
+\subsection{Group Member Signatures}
+Each member of the group should sign this section with their name and student ID.
+
+\vspace{1em}
+
+\begin{tabularx}{\textwidth}{@{}p{4cm} p{4cm} X @{}}
+\toprule
+\textbf{Name} & \textbf{Student ID} & \textbf{Signature / Confirmation} \\
+\midrule
+\mytodo{Member 1 Name} & \mytodo{12345678} & I confirm the above description of the method and my contribution. \\
+\mytodo{Member 2 Name} & \mytodo{23456789} & I confirm the above description of the method and my contribution. \\
+\mytodo{Member 3 Name} & \mytodo{34567890} & I confirm the above description of the method and my contribution. \\
+% Add more rows as needed
+\bottomrule
+\end{tabularx}
+
+% ==========================================================
+% APPENDIX – FURTHER RULES (OPTIONAL COPY)
+% ==========================================================
+\newpage
+\appendix
+\section{Further Rules (For Reference Only)}
+\begin{enumerate}[leftmargin=1.5em]
+  \item No anonymous submissions.
+  \item Every group member should attend every meeting. If you cannot attend (illness, job interview, etc.) let your group teammates know as soon as possible.
+  \item If your group is not functioning or someone is not engaging, responding to communications or attending meetings, please let Mingfei Sun (\href{mailto:mingfei.sun@manchester.ac.uk}{mingfei.sun@manchester.ac.uk}) know as soon as possible.
+\end{enumerate}
+
+\end{document}

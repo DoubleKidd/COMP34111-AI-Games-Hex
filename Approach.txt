@@ -1,0 +1,213 @@
+I'm going to build an alphazero style deep learning solution, where a number of neural networks are used to run an efficient MCTS.
+
+First I set up some of the neural network design.
+
+
+For our input, I'm going to use 2 layers of 11 x 11 grids which are numpy arrays. - utils.py (encode_board)
+The first layer will represent the positions of the agent's pieces. 
+The second layer will represent the positions of the opponent's pieces.
+
+I will also transpose the board for the agent playing as BLUE, so that the neural network always sees the board from the perspective of the player connecting TOP to BOTTOM.
+
+This is implemented in utils as encode_board. We must remember to transpose the board back when making moves.
+
+Effectively this allows our AI to 'see' the board.
+
+
+Next we are creating the neural network architecture. - model.py
+There are Convolutional layers which use kernal (filter over a section of the board) to extract board patterns.
+We will use a ResNet architecture, with a number of feed foward residual blocks as our main brain.
+The network will have two heads:
+- A policy head, which outputs a probability distribution over all possible moves.
+- A value head, which outputs a single scalar value representing the expected outcome of the game from the current state.
+Everything here gets trained.
+
+
+Then we need a way to select moves using the neural network. - mcts.py
+We will use Monte Carlo Tree Search (MCTS) to select moves.
+MCTS will use the policy and value outputs from the neural network to guide its search.
+The policy output will be used to prioritize which moves to explore.
+The value output will be used to evaluate the desirability of game states during the search.
+This combination of neural networks and MCTS allows the agent to make informed decisions based on both learned patterns and strategic exploration of possible future states.
+It also allows the training to be specific and more efficient, instead of requiring exploration of the entire game tree.
+Method:
+- Selection: Follow the path of moves that have high Visit Counts (N) and high Win Rates (Q).
+- Expansion: When we hit a new board state, ask the Neural Network: "Who is winning? (v) And where should I move? (p).
+- Backpropagation: Update the path we took with the new value.
+
+This then gets implemented into the agent. 
+The last thing worth mentioning is the handling of the swap rule on turn 2.
+On turn 2, if the opponent's first move is too strong (as determined by the value head of the neural network), we will swap sides and take that move instead.
+
+Finally, we create train.py, which will handle the self play games, data collection, and training of the neural network.
+This allows the agent to improve over time by learning from its own experiences.
+It loops through the following steps:
+- Self-Play: The AI plays X games against itself using its current weights.
+- Data Collection: We record every board position it saw, the move probabilities MCTS calculated (the "target" policy), and who eventually won that game.
+- Training: We feed this data into the Neural Network.
+        We teach the Policy Head to predict the MCTS move probabilities.
+        We teach the Value Head to predict the game winner.
+- Save: We run a tournament of 10 games aganet the previous best model, and overwrite if we win more than 50% of the games (so 6 or more games).
+This will run infinitely,but the best model will be saved after each training iteration, so it can be stopped safely using Ctrl+C.
+    Note, when training, if cntrl+c is used during saving of a model, that model may be corrupted.
+    We use a temporary file and then rename it to avoid this, so only the last completed model save will be corrupted in this case.
+
+The loss calculated is a combination of the policy loss (cross-entropy between predicted and target move probabilities) and value loss (mean squared error between predicted and actual game outcomes).
+Lower loss indicates the model is better at predicting both the best moves and the expected game outcomes.
+However loss may get stuck as we are slef playing, which means that as one bot improves, the other does too, so it gets harder to predict the loss.
+
+
+I plan to train on a simpler smaller board (6x6) first to ensure everything is working, and get a basic level of play.
+This will last roughly 3 hours of training, or until the loss gets below 1.5.
+Then I will scale up to the full 11x11 board for stronger play.
+After a day of training, i noticed that (on iteration 31), we hadn't actually had a winning agent since iteration 11. Lots of full loss or draws.
+As such reduce the cap to becoming the new bets model to winning 50% (half) the games. 
+While this doesn't show that the model is better, due to the training time this model SHOULD have better weights, and so this should in the long term improve it.
+
+After a week of constant training, I decided to run the bot to see how it did. I pitted it against the ValidNiaveAgent we made earlier. The firts time, it timedout, so I reduced the number of simulations down to 10. 
+On looking into this, it looked like the agent was attempting to connect the wrong sides? I checked, and in my training I had forgotten to switch the board if the player was blue. This meant that if the player was blue, it was trying to connect top to bottom not left to right. I added this change. Thats broken everything! I need to train a whole new model now.
+
+I back up the best model to git, just incase, then begin training again.
+After a few iterations I want to test it. Dam it, I messed up again. This time, the correct output was being used, but the wrong data was sent back for training. I was sending blue as horizontal instead of vertical. Drat!
+
+Once again making the modification to the training data and re-running the training, i see the loss reducing much faster which is a good sign. After 27 iterations its down to 3.1, and its consistantly decreasing. This is a good sign that training is operating as intended now. 
+Rough Expectation:
+    Iterations 0-20: The agent will place pieces randomly. It might lose to the random agent.
+    Iterations 20-50: It will start connecting pieces locally (small chains), but will miss long-distance blocks.
+    Iterations 50-100: It will consistently beat the random agent. It will understand "I need to cross the board."
+    Iterations 100+: It will start developing basic strategies (like the "bridge" connection).
+
+After 200 iterations, I played the model against the niave model. It lost every time.
+My theory of why is the following:
+    My simulation number was set low (25) for speed. This meant that MCTS was heavily relying on the Policy selector, instead of its own exploration.
+    The policy selector starts off with no knowledge.
+    Thus, when training the model, it confidently makes moves which are not strong, since the model is confident and the simulations mean we can't explore lots.
+There are 2 main options to improve on this:
+1. Increase the number of simulations. This would allow the MCTS to figure out which moves actually lead to success, without relying on the rubbish starting weights of the model. This is a problem, as increasing the number of simulations causes an increase in time to run. We could use something like RAVE to try and improve on the performance, but this might stagnate the AI performance, as RAVE is attempting to do the same job as our policy network.
+2. Use supervised learning as a startingpoint to get a solid grasp of the game. Can then learn by self play, as the polciy selector will have a decent idea of move weight values..
+
+First I want to prove this is the problem. I am going to train a model using the following:
+    trainer = AlphaZeroTrainer(board_size=4, simulations=50)
+    trainer.train(num_iterations=30, episodes_per_iter=20)
+Since the board is small, the number os simulations should be way enough.
+At the end of this, I'll play the bot vs the niave random bot, and see who wins.
+If the AI wins, the issue was as specified above.
+If the AI loses, the issue is something else.
+
+And after this finished the AI won 3 out of 10 games, thats worse than random!
+Looking at the loss, again it gets stuck around 3, why is this?
+Lets do some math. If the policy chose completely randomly, it would have a 1/16 chance of picking the best move (for our 4x4 board).
+Our Policy loss (cross-entropy) = - sum(target x ln (prediciton)). Since we have a 1/16 chance of picking each move (assuming randomness), that gives us -ln(1/16) x sum(target). since the targets should all eventually sum to 1, we get -ln(1/16) x 1 = ln(16) = 2.77...
+
+Now our Value Loss, the mean squared error = (target - prediciton)^2. If the model isn't sure who will win (low probability), then Tanh will force the value to 0, producing a MSE of (1 - 0)^2 = 1 in the case of a win, and (-1 - 0)^2 = 1 in the case of a loss. Averaging this gives us (1+1)/2 = 1.
+Thus the random unfonfident guess is loss of 2.77 + 1 = 3.77.
+Since we are getting a slightly lower loss, its likely that the model is getting slightly better at prediciting which stone is next. Probably purely from 'learning' that a stone cannot go atop another stone. This gets us stuck roughly around the 3 mark.
+
+So we theorise that the model isn't learning enough information. Especially when its playing itself, it should be good at knowing what moves are going to be used next. But its playing lots of games? 
+
+Looking at our training, We are playing 20 games, which is roughly 14 moves a game totalling 280 moves to train on. But we use a batch size of 64, meaning we are only updating our model weights math.ceil(280/64) = 5 times. 
+This probababally instead enough updates to actually let the model learn the move details. 
+We need to train for a number fo epochs on the data, to allow the model to fully grasp the data.
+
+Deleting the best model, and setting our training to run for 10 epochs per cycle of self play/tournament, we instantly get much better losses. I also print then policy and validation loss, showing values of:
+    Training Policy Loss: 1.2110
+    Training Validation Loss: 0.1985
+    Training Loss: 1.4095
+After only 5 iterations. 
+Running for 30 iterations again, we get these down to:
+    Training Policy Loss: 0.8402
+    Training Validation Loss: 0.1176
+    Training Loss: 0.9579
+This is a massive improvement on the previous 3.0 stuck point. Lets try this against the niave bot.
+Now we get a win rate of 0.24 in 50 games. 
+
+I then discovered an issue with the multiple agme running, that the colours were never switched. This was a pain to implement, as players contain agents (they are not agents themselves) and agents don't even have an acccessible colour. Eventually I got there. Retesting as its now fair with colours swapping, we get a win rate of 0.14 in 50 games. 
+Even worse, but this does make sense, as previously the agent always got to 'go first' and it was very rare that a swap move would be used, effectively giving the AI the 'first move'. 
+
+I'm going to try a few different things to improve the model:
+1. reduce cpu_ct, the weight given to exploration in mcts, so we play the best move more often instead of exploring.
+2. lower temperature, the randomness of the probabailities chosen by the ai.
+3. increase the number of simulations, to increase the realiability of MCTS data.
+
+After 30 iterations we get very similar losses to before, but against the niave bot we get a win rate of 0.12 in 50 games.
+Then I check and i had accidently used 10 simulations, I change this to 200. 
+However i do notice something, our weights converge extreamly quickly to that peak value, this might mean we are overfitting with 10 epochs. I reduce the epochs to 5, and add some weight_decay to our optimizer in order to try and minimise the likelyhood of overfitting.
+
+After 5 iterations we had a loss of around 0.8 and out of 50 games had a win rate of 0.26. So our bot is doing worse than pure random play. Something must be wrong if we are performing that much worse than random consistently.
+
+Checking through my code, I look at the MCTS logic an find the bug. 
+Currently, if the MCTS gets an end state, it returns its state -1, as it must have lost (since its currently its turn but the game already ended). 
+However, we then use that value for the player above, and invert it on return. Effectively saying, whichever player caused the end state lost, even though thats the player that won. This is why our model was losing to random, it was learning very effectively, learning how to lose! I make the change by switching where the negation of loss takes place and restrat training.
+
+Now the loss is decreasing a bit slower, and stagnates around 2.3. Running our 50 games, we get a win rate of 0.96. Yay! Looks like we solved the problem.
+
+Now lets go back to our 11x11 board, but with the knowledge we now have. We want to start with a high number of simulations then drop it over time. The same goes for the exploration rate and temperature, start high then reduce.
+
+The initial training gave the following:
+=== Iteration 1 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 4.1442
+Training Validation Loss: 0.0142
+Training Loss: 4.1584
+Evaluating... No existing champion. Automatic win.
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 1 took 1695.15 seconds (28.25 minutes).
+
+=== Iteration 2 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 3.5610
+Training Validation Loss: 0.0401
+Training Loss: 3.6011
+Evaluating... ARENA (10 games): LWLWLWLWLW | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 2 took 1831.92 seconds (30.53 minutes).
+
+=== Iteration 3 ===
+Self-Playing (Parallel)... ..............^[..^[.... Done!
+Training Policy Loss: 3.2487
+Training Validation Loss: 0.0368
+Training Loss: 3.2855
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 3 took 1924.61 seconds (32.08 minutes).
+
+=== Iteration 4 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 3.2701
+Training Validation Loss: 0.0447
+Training Loss: 3.3148
+Evaluating... ARENA (10 games): LLLLLLLLLL | Result: 0/10
+>>> CHALLENGER LOST. Discarding weights.
+Iteration 4 took 1851.78 seconds (30.86 minutes).
+
+=== Iteration 5 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 3.3074
+Training Validation Loss: 0.0336
+Training Loss: 3.3410
+Evaluating... ARENA (10 games): WLWLWLWLWL | Result: 5/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 5 took 1880.81 seconds (31.35 minutes).
+
+=== Iteration 6 ===
+Self-Playing (Parallel)... .................... Done!
+Training Policy Loss: 3.0836
+Training Validation Loss: 0.0427
+Training Loss: 3.1263
+Evaluating... ARENA (10 games): WWWWWWWWWW | Result: 10/10
+>>> CHALLENGER WON! Accepting new weights.
+SAVED NEW BEST MODEL to agents/DeepLearningAgent/best_model.pth
+Iteration 6 took 1924.74 seconds (32.08 minutes).
+
+And then I stopped to test after iteration 6
+Training Policy Loss: 3.0836
+Training Validation Loss: 0.0427
+Training Loss: 3.1263
+And in 10 games this model had a 0.7 win rate. Lets keep training.
+
+After 50 iterations, it got a 1.0 win rate (against the niave bot). At this point, since the model is already advanced, I lower the learning rate from 0.001 to 0.0005 as the model does not need to learn huge changes anymore, only refining its model.
+I also change the threshold of games to win to update the model. Now that the model has learnt some good weights, it should use the full AlphaZero style strategy of only improving when it certainly improves. I am still only running a small number of games (10) for this competition, due to the comuting time it takes, however due to this, I increase the threshold past the previous threshold of 50% to 90%, basically saying that if the model is not consistently better than the previous one, it should be ignored. Looking at our past data, this will work as we seem to only get three outcomes, full loss, full win or draw. This is likely due to having the temperature set so low. 
+Due to this i can also drop the number of evaluation games down to 6, meaning that the new model must win every game to become the new best. 
