@@ -314,8 +314,8 @@ None (Collectively wrote the group powerpoint).
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-TX & All & 09/12 & Script and rehearse the presentation.
-TX & Naddy & 11/12 & Look into implementing RAVE or other optimisations for MCTS.
+TX & All & 09/12 & Script and rehearse the presentation. \\
+TX & Naddy & 11/12 & Look into implementing RAVE or other optimisations for MCTS. \\
 TX & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game endings. \\
 % Add more rows as needed
 \bottomrule
@@ -405,6 +405,7 @@ TX & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learn
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
+TX & Naddy & 16/12 & Research further optimisations for the MCTS implementation and add them.  \\
 TX & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it, to avoid extensive training being required. \\
 % Add more rows as needed
 \bottomrule
@@ -413,6 +414,7 @@ TX & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it
 
 \paragraph{Rationale for Decisions}
 \begin{itemize}[leftmargin=1.5em]
+  \item The MCTS implementation is performing decently, but it still takes too long per turn to reach that point. May considering moving away from python.
   \item TX. While AlphaZero was learning correctly, it would need massive amounts of computing power to train to a decent level. Sicne the discussion board says we can use pre-trained models, I implement a bot based on the existing KataHex model.
 \end{itemize}
 }
