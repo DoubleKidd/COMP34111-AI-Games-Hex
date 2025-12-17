@@ -1,23 +1,33 @@
-from random import random
-from typing import Self
+from copy import deepcopy
+import random
+from typing import Callable, Self
 
-from agents.Naddy.evaluate import action, evaluate
+from agents.Naddy.simulate import action, actions, simulate, state_to_result
 from src.Board import Board
+from src.Colour import Colour
+from src.Move import Move
 
 
 class Node:
-    def __init__(self, state: Board, parent: Self = None):
-        """ Initializes a Node in the MCTS tree. """
+    def __init__(
+        self,
+        state: Board,
+        move: Move = None,
+        colour: Colour = None,
+        turn: int = 0,
+        parent: Self | None = None
+    ):
+        """Initialise a node."""
         self.state = state
+        self.move = move
+        self.colour = colour
+        self.turn = turn
         self.parent = parent
 
-        self.children: list[Self] = []
+        self.children: set[Self] = set()
         self.visits = 0
-        self.reward = 0
+        self.result = 0
         self.expanded = False
-
-        self.action_func = action
-        self.evaluate_func = evaluate
 
     def has_children(self) -> bool:
         return len(self.children) > 0
@@ -25,46 +35,63 @@ class Node:
     def is_leaf(self) -> bool:
         return len(self.children) == 0 and self.expanded
 
-    def evaluate(self) -> float:
-        """Evaluate the node's state and return its reward."""
-        if self.evaluate_func:
-            self.reward = self.evaluate_func(self.state)
-            return self.reward
-        return 0.0
+    def simulate(self) -> tuple[Board, float]:
+        """Simulate from the node's state and return the outcome."""
+        simulation = simulate(self.state, self.colour.opposite())
+        result = state_to_result(simulation, self.colour)
+        return simulation, result
 
-    def expand(self) -> list[Self]:
+    def expand(self) -> Self | None:
         """Generate child nodes from the current node's state."""
         self.expanded = True
-        if self.action_func:
-            child_states = self.action_func(self.state)
+        possible_moves = actions(self.get_state())
+        if possible_moves == []:
+            return None
 
-            for new_state in child_states:
-                # Create a child for each state
-                child_node = Node(new_state, parent=self)
+        for new_move in possible_moves:
+            child_node = Node(
+                state=None,
+                move=new_move,
+                colour=self.colour.opposite(),
+                turn=self.turn+1,
+                parent=self
+            )
+            self.children.add(child_node)
 
-                # Evaluate the state
-                child_node.evaluate()
-                self.children.append(child_node)
+        chosen_child = random.choice(list(self.children))
+        chosen_child.get_state()
+        return chosen_child
 
-                # Early stopping for max reward
-                if self.evaluate_func and child_node.reward >= 1:
-                    return self.children  
+    def get_state(self) -> Board:
+        """Reconstruct state from parent's state and move."""
+        if self.state is not None:
+            return self.state
+        if self.parent:
+            self.state = deepcopy(self.parent.get_state())
+            self.state.set_tile_colour(self.move.x, self.move.y, self.colour)
+        return self.state
 
-        return self.children
-
-    def best_child(self, policy_func: callable[[Self], Self]) -> Self | None:
-        """ Selects the best child based on the provided policy function. """
+    def best_child(self, policy_func: Callable[[Self], Self]) -> Self | None:
+        """Select the best child node based on the tree policy."""
         if not self.children:
             return None  
 
-        # Apply policy function to select the best child
-        return policy_func(self.children)  
+        return policy_func(self.children)
 
-    def backpropagate(self, reward: float):
+    def backpropagate(self, result: float):
         """Update reward and visits and propagate."""
         self.visits += 1
-
-        self.reward += (reward - self.reward) / self.visits
+        self.result += result
 
         if self.parent:
-            self.parent.backpropagate(reward)
+            self.parent.backpropagate(1 - result)
+
+    def visualise_tree(self, depth: int = 0):
+        """Prints a visual representation of the tree from the given node."""
+        indent = "_" * depth
+        print(f"{indent}{self.move}, {self.colour}, R: {self.reward:.2f}, V: {self.visits}")
+        for child in self.children:
+            child.visualise_tree(depth + 1)
+
+    @property
+    def reward(self): return self.result / self.visits

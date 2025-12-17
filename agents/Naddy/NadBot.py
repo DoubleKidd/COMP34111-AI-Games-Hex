@@ -1,5 +1,8 @@
 from random import choice
 
+from agents.Naddy.node import Node
+from agents.Naddy.policy import ucb1_policy
+from agents.Naddy.search import mcts
 from src.AgentBase import AgentBase
 from src.Board import Board
 from src.Colour import Colour
@@ -16,24 +19,11 @@ class NadBot(AgentBase):
     You CANNOT modify the AgentBase class, otherwise your agent might not function.
     """
 
-    _choices: list[Move]
-    _board_size: int = 11
     _internal_board: Board
 
     def __init__(self, colour: Colour):
         super().__init__(colour)
-        self._choices = [
-            (i, j) for i in range(self._board_size) for j in range(self._board_size)
-        ]
         self._internal_board = None
-    
-    def analyse_board(self, board: Board) -> float:
-        """Returns a float representing how close each player is to winning.
-        -INF means red has won, 
-        INF means blue has won
-        """
-
-        pass
 
     def make_move(self, turn: int, board: Board, opp_move: Move | None) -> Move:
         """The game engine will call this method to request a move from the agent.
@@ -51,20 +41,24 @@ class NadBot(AgentBase):
             Move: The agent move
         """
 
+        previous_node = None
         # Remove opponents last move from choices
         if opp_move is not None and opp_move.x != -1:
             opponent_move = (opp_move.x, opp_move.y)
-            self._choices.remove(opponent_move)
 
-        if turn == 2:
-            return Move(-1, -1)
-        else:
-            x, y = choice(self._choices)
-            move = Move(x, y)
+        current_node = Node(
+            state=board,
+            move=opp_move,
+            colour=self.colour.opposite(),
+            turn=turn,
+            parent=previous_node
+        )
+        best_move = mcts(
+            current_node,
+            ucb1_policy,
+            iterations=1000,
+        )
+        # current_node.visualise_tree()
 
-            # Remove move from choices and return move
-            self._choices.remove((x, y))
-            return move
-
-
-    
+        previous_node = current_node
+        return best_move

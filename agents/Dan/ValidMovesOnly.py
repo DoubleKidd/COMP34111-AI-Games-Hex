@@ -11,7 +11,7 @@ class Valid(AgentBase):
     """
 
     _choices: list[Move]
-    _board_size: int = 11
+    _board_size: int = 7
 
     def __init__(self, colour: Colour):
         super().__init__(colour)
@@ -48,15 +48,12 @@ class Valid(AgentBase):
             opponent_move = (opp_move.x, opp_move.y)
             self._choices.remove(opponent_move)
 
-        if turn == 2:
-            return Move(-1, -1)
-        else:
-            x, y = choice(self._choices)
-            move = Move(x, y)
+        x, y = choice(self._choices)
+        move = Move(x, y)
 
-            # Remove move from choices and return move
-            self._choices.remove((x, y))
-            return move
+        # Remove move from choices and return move
+        self._choices.remove((x, y))
+        return move
 
 
     
