@@ -14,17 +14,19 @@ class Node:
         state: Board,
         move: Move = None,
         colour: Colour = None,
+        turn: int = 0,
         parent: Self | None = None
     ):
         """Initialise a node."""
         self.state = state
         self.move = move
         self.colour = colour
+        self.turn = turn
         self.parent = parent
 
         self.children: set[Self] = set()
         self.visits = 0
-        self.reward = 0.5
+        self.result = 0
         self.expanded = False
 
     def has_children(self) -> bool:
@@ -42,17 +44,32 @@ class Node:
     def expand(self) -> Self | None:
         """Generate child nodes from the current node's state."""
         self.expanded = True
-        possible_moves = actions(self.state)
+        possible_moves = actions(self.get_state())
         if possible_moves == []:
             return None
 
         for new_move in possible_moves:
-            new_state = deepcopy(self.state)
-            new_state.set_tile_colour(new_move.x, new_move.y, self.colour.opposite())
-            child_node = Node(new_state, move=new_move, colour=self.colour.opposite(), parent=self)
+            child_node = Node(
+                state=None,
+                move=new_move,
+                colour=self.colour.opposite(),
+                turn=self.turn+1,
+                parent=self
+            )
             self.children.add(child_node)
 
-        return random.choice(list(self.children))
+        chosen_child = random.choice(list(self.children))
+        chosen_child.get_state()
+        return chosen_child
+
+    def get_state(self) -> Board:
+        """Reconstruct state from parent's state and move."""
+        if self.state is not None:
+            return self.state
+        if self.parent:
+            self.state = deepcopy(self.parent.get_state())
+            self.state.set_tile_colour(self.move.x, self.move.y, self.colour)
+        return self.state
 
     def best_child(self, policy_func: Callable[[Self], Self]) -> Self | None:
         """Select the best child node based on the tree policy."""
@@ -61,14 +78,13 @@ class Node:
 
         return policy_func(self.children)
 
-    def backpropagate(self, reward: float):
+    def backpropagate(self, result: float):
         """Update reward and visits and propagate."""
         self.visits += 1
-
-        self.reward += (reward - self.reward) / self.visits
+        self.result += result
 
         if self.parent:
-            self.parent.backpropagate(1 - reward)
+            self.parent.backpropagate(1 - result)
 
     def visualise_tree(self, depth: int = 0):
         """Prints a visual representation of the tree from the given node."""
@@ -76,3 +92,6 @@ class Node:
         print(f"{indent}{self.move}, {self.colour}, R: {self.reward:.2f}, V: {self.visits}")
         for child in self.children:
             child.visualise_tree(depth + 1)
+
+    @property
+    def reward(self): return self.result / self.visits

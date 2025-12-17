@@ -7,6 +7,7 @@ from agents.Naddy.policy import *
 from src.Move import Move
 
 log_dir = Path(__file__).parent / "logs"
+log_dir.mkdir(exist_ok=True)
 log_file = log_dir / f"mcts_{datetime.now().strftime('%d_%H%M%S')}.log"
 
 logger = logging.getLogger(__name__)
@@ -31,6 +32,12 @@ def traverse_all(node: Node):
     return nodes
 
 
+def take_time(last_time: datetime, msg: str) -> datetime:
+    curr_time = datetime.now()
+    logger.debug(f"{msg} took {(curr_time - last_time).microseconds / 1000}ms")
+    return curr_time
+
+
 def mcts(
     root: Node,
     selection_policy: Callable,
@@ -41,6 +48,7 @@ def mcts(
     """Performs MCTS search and returns the best immediate next move for the AI."""
     logger.info(f"Performing MCTS with {iterations} iterations as {root.colour.opposite()} on\n{root.state}")
 
+    last_time = datetime.now()
     for _ in range(iterations):
         node = root
 
@@ -62,26 +70,30 @@ def mcts(
             continue
 
         logger.debug(f"Selected node move: {node.move}")
-        logger.debug(f"\n{node.state}")
+        logger.debug(f"\n{node.get_state()}")
 
+        last_time = take_time(last_time, "Selection")
         # --- EXPANSION ---
-        if not node.has_children():
+        if not node.expanded:
             child = node.expand()
             if child is None:
                 logger.debug("Expansion returned no children (terminal state?).")
                 continue
             logger.debug(f"Expanded node move: {child.move}")
-            logger.debug(f"\n{child.state}")
+            logger.debug(f"\n{child.get_state()}")
         else:
             child = node
+        last_time = take_time(last_time, "Expansion")
 
         # --- SIMULATION ---
         simulation, result = child.simulate()
         logger.debug(f"Simulated State:\n{simulation}\nResult: {result}")
+        last_time = take_time(last_time, "Simulation")
 
         # --- BACKPROPAGATION ---
         child.backpropagate(result)
-        logger.debug(f"Backpropagated value {result}\nChild reward {child.reward}\nParent reward {child.parent.reward if child.parent else 'None'}")
+        logger.debug(f"Child reward {child.reward} ({child.reward} / {child.visits})\nParent reward {child.parent.reward if child.parent else 'None'}")
+        last_time = take_time(last_time, "Backpropagation")
 
     # After all iterations, select the best child of the root node
     if root.children:

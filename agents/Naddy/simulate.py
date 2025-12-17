@@ -22,7 +22,7 @@ def action(state: Board) -> Move | None:
     return random.choice(moves) if moves != [] else None
 
 
-def state_to_result(state: Board, colour: Colour) -> bool:
+def state_to_result(state: Board, colour: Colour) -> float:
     """Checks who has won in the given state."""
     if state.has_ended(colour):
         return 1.0
