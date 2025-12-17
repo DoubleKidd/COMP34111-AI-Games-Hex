@@ -92,61 +92,6 @@ Comment on:
 % 2) Use the long table that follows for a compact overview.
 
 \subsection*{Log}
-\mytodo{
-
-\subsection{Meeting Template (example structure)}
-% Copy-paste this sub-section for every meeting and fill it in.
-
-\subsubsection*{Meeting \#1}
-\textbf{Date:} DD/MM/YYYY \\
-\textbf{Time:} HH:MM--HH:MM \\
-\textbf{Location:} Room / Online Platform
-
-\paragraph{Members Present}
-\begin{itemize}[leftmargin=1.5em]
-  \item Member A (Student ID)
-  \item Member B (Student ID)
-  \item Member C (Student ID)
-  % etc.
-\end{itemize}
-
-\paragraph{Apologies for Absence}
-\begin{itemize}[leftmargin=1.5em]
-  \item Member X (reason, if known)
-  % If no apologies, write: None.
-\end{itemize}
-
-\paragraph{Tasks Agreed}
-Use the following format to list tasks assigned during the meeting.
-% For clarity, use a table.
-
-\begin{tabularx}{\textwidth}{@{} l l l X @{}}
-\toprule
-\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
-\midrule
-T1 & Ben & 12/12 & Utilize an Alpha Zero Approach, using MCTS \& Deep Learning. \\
-T2 & Daniel & 09/12 & Evalutation function. \\
-T3 & Daniel & 12/12 & Alpha Beta. \\
-T4 & Naddy \& David & 12/12 & Manual MCTS (Policy Selection, etc). \\
-% Add more rows as needed
-\bottomrule
-\end{tabularx}
-
-\vspace{0.5em}
-If a task is assigned to someone absent, that person should update this log and add when they agree to do it.
-
-\paragraph{Rationale for Decisions}
-
-
-Briefly explain what led to the decisions taken at this meeting. For example:
-\begin{itemize}[leftmargin=1.5em]
-  \item Why particular tasks were prioritised
-  \item Any alternatives considered
-  \item How the group reached agreement
-\end{itemize}
-}
-
-\bigskip
 
 \mytodo{
 
@@ -170,8 +115,7 @@ Briefly explain what led to the decisions taken at this meeting. For example:
   % If no apologies, write: None.
 \end{itemize}
 
-\paragraph{Tasks Agreed}
-Use the following format to list tasks assigned during the meeting.
+\paragraph{Tasks Agreed}:
 % For clarity, use a table.
 
 \begin{tabularx}{\textwidth}{@{} l l l X @{}}
@@ -187,11 +131,10 @@ T4 & Naddy \& David & 12/12 & Manual MCTS (Policy Selection, etc). \\
 \end{tabularx}
 
 \paragraph{Rationale for Decisions}
-Briefly explain what led to the decisions taken at this meeting. For example:
 \begin{itemize}[leftmargin=1.5em]
-  \item Seperating individual approaches allowed for the most parralelisation of work.
-  \item We felt that within the unit, the main approaches avaliable were AlphaBeta (MinMax), MCTS and AlphaGo (AlphaZero), which could be expanded on using other approaches. We decided to attempt all of these, and then evalutate which performed the best at the end.
-  \item Tasks were divided based on interest and location. David and Naddy live together so it made sence for them to share MCTS. This was considered the largest task, and most important as it could utilise approaches from others (e.g. evalutation functions, trained neural networks).
+  \item Separating individual approaches allowed for the most parallelisation of work.
+  \item We felt that within the unit, the main approaches available were AlphaBeta (MiniMax), MCTS and AlphaGo (AlphaZero), which could be expanded on using other approaches. We decided to attempt all of these, and then evaluate which performed the best at the end.
+  \item Tasks were divided based on interest and location. David and Naddy live together so it made sense for them to share MCTS. This was considered the largest task, and most important as it could utilise approaches from others (e.g. evalutation functions, trained neural networks).
 \end{itemize}
 }
 
@@ -220,7 +163,7 @@ Briefly explain what led to the decisions taken at this meeting. For example:
 \end{itemize}
 
 \paragraph{Tasks Agreed}
-None (Collectively wrote and submitted the group performa).
+None (Collectively wrote and submitted the group proforma).
 }
 
 \bigskip
@@ -246,8 +189,24 @@ None (Collectively wrote and submitted the group performa).
   % If no apologies, write: None.
 \end{itemize}
 
-\paragraph{Tasks Agreed}
-None (Collectively wrote and submitted the group performa).
+\paragraph{Tasks Agreed}:
+% For clarity, use a table.
+
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+\toprule
+\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
+\midrule
+T5 & Naddy & 30/11 & Research relevant papers on how to implement MCTS in Hex. \\
+T6 & Daniel & 02/12 & Create a visualiser for the evaluation function. \\
+% Add more rows as needed
+\bottomrule
+\end{tabularx}
+
+\paragraph{Rationale for Decisions}
+\begin{itemize}[leftmargin=1.5em]
+  \item There are plenty of resources available from researchers who have optimised Hex agents before. Their findings will help with making the algorithm faster.
+  \item It is difficult to identify if what the evaluation function is doing makes sense or not, so we should have an easy way to see what it thinks.
+\end{itemize}
 }
 
 \bigskip
@@ -274,21 +233,26 @@ None (Collectively wrote and submitted the group performa).
   % If no apologies, write: None.
 \end{itemize}
 
-\paragraph{Tasks Agreed}
-Use the following format to list tasks assigned during the meeting.
+\paragraph{Tasks Agreed}:
 % For clarity, use a table.
 
 \begin{tabularx}{\textwidth}{@{} l l l X @{}}
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T5 & Ben & 09/12 & Implement prioritisation to fasting winning games. \\
+TX & All & 07/12 & Create and fill out our presentation. \\
+TX & Naddy & 09/12 & Run some experiments with the MCTS implementation. \\
+TX & Ben & 09/12 & Implement prioritisation to speed up winning games. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
 
 \paragraph{Rationale for Decisions}
-The AlphaZero approach was winning consistently, but was taking almost full boards to win.
+\begin{itemize}[leftmargin=1.5em]
+  \item Our presentation is coming up soon and we want to get it done sooner rather than later, so it won't get in the way of making our models.
+  \item The presentation requires some experimental results so ideally the vanilla MCTS implementation should be working and winning before then.
+  \item The AlphaZero approach was winning consistently, but was taking almost full boards to win.
+\end{itemize}
 }
 
 \bigskip
@@ -343,26 +307,27 @@ None (Collectively wrote the group powerpoint).
   % If no apologies, write: None.
 \end{itemize}
 
-\paragraph{Tasks Agreed}
-\paragraph{Tasks Agreed}
-Use the following format to list tasks assigned during the meeting.
+\paragraph{Tasks Agreed}:
 % For clarity, use a table.
 
 \begin{tabularx}{\textwidth}{@{} l l l X @{}}
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T6 & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game endings. \\
+TX & All & 09/12 & Script and rehearse the presentation.
+TX & Naddy & 11/12 & Look into implementing RAVE or other optimisations for MCTS.
+TX & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game endings. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
 
 
 \paragraph{Rationale for Decisions}
-T6. Game endings were struggling to be found, sometimes with the AI having a winning board state but never playing it. Minimax used at the start of the move to check up to a given depth (which increases based on the number of moves played to keep compute power reasonable), playing winning moves if found, or blocking moves if opponent winning moves found. If no certain win/loss moves are found, normal AlphaZero is used.
-\\
-All Finalised and practiced group powerpoint.
-
+\begin{itemize}[leftmargin=1.5em]
+  \item We need to ensure we're within the time limit of the presentation to get everyone's input.
+  \item MCTS was not quick enough at finding optimal moves on a board as big as 11x11.
+  \item Game endings were struggling to be found, sometimes with the AI having a winning board state but never playing it. Minimax used at the start of the move to check up to a given depth (which increases based on the number of moves played to keep compute power reasonable), playing winning moves if found, or blocking moves if opponent winning moves found. If no certain win/loss moves are found, normal AlphaZero is used.
+\end{itemize}
 }
 
 \bigskip
@@ -388,22 +353,25 @@ All Finalised and practiced group powerpoint.
   % If no apologies, write: None.
 \end{itemize}
 
-\paragraph{Tasks Agreed}
-Use the following format to list tasks assigned during the meeting.
+\paragraph{Tasks Agreed}:
 % For clarity, use a table.
 
 \begin{tabularx}{\textwidth}{@{} l l l X @{}}
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T7 & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learning. \\
+TX & Naddy & 14/12 & Run optimised MCTS implementation against other models. \\
+TX & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learning. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
 
 
 \paragraph{Rationale for Decisions}
-T7. While the model was learning well, it would take lots of games to get strong. Utilise known good games to train the AI initially, hoping it will pick up on some good initial patterns/weights.
+\begin{itemize}[leftmargin=1.5em]
+  \item This will be done to find the MCTS implementation's weaknesses, and to give guidance on what to focus a heuristic on.
+  \item While the model was learning well, it would take lots of games to get strong. Utilise known good games to train the AI initially, hoping it will pick up on some good initial patterns/weights.
+\end{itemize}
 }
 
 \bigskip
@@ -430,22 +398,23 @@ T7. While the model was learning well, it would take lots of games to get strong
   % If no apologies, write: None.
 \end{itemize}
 
-\paragraph{Tasks Agreed}
-Use the following format to list tasks assigned during the meeting.
+\paragraph{Tasks Agreed}:
 % For clarity, use a table.
 
 \begin{tabularx}{\textwidth}{@{} l l l X @{}}
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T8 & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it, to avoid extensive training being required. \\
+TX & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it, to avoid extensive training being required. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
 
 
 \paragraph{Rationale for Decisions}
-T8. While AlphaZero was learning correctly, it would need massive amounts of computing power to train to a decent level. Sicne the discussion board says we can use pre-trained models, I implement a bot based on the existing KataHex model.
+\begin{itemize}[leftmargin=1.5em]
+  \item TX. While AlphaZero was learning correctly, it would need massive amounts of computing power to train to a decent level. Sicne the discussion board says we can use pre-trained models, I implement a bot based on the existing KataHex model.
+\end{itemize}
 }
 
 \bigskip
@@ -472,27 +441,27 @@ T8. While AlphaZero was learning correctly, it would need massive amounts of com
   % If no apologies, write: None.
 \end{itemize}
 
-\paragraph{Tasks Agreed}
-Use the following format to list tasks assigned during the meeting.
+\paragraph{Tasks Agreed}:
 % For clarity, use a table.
 
 \begin{tabularx}{\textwidth}{@{} l l l X @{}}
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T8 & Ben (1101977) & 18/12 & Complete their journal version \\
-T9 & Naddy (11011468) & 18/12 & Complete their journal version \\
-T10 & David (11054893) & 18/12 & Complete their journal version \\
-T11 & Daniel (11017362) & 18/12 & Complete their journal version \\
-T12 & Ben & 18/12 & In the same way as with the AlphaZero approach, add Minimax for KataHex. \\
+TX & Ben (1101977) & 18/12 & Complete their journal version \\
+TX & Naddy (11011468) & 18/12 & Complete their journal version \\
+TX & David (11054893) & 18/12 & Complete their journal version \\
+TX & Daniel (11017362) & 18/12 & Complete their journal version \\
+TX & Ben & 18/12 & In the same way as with the AlphaZero approach, add Minimax for KataHex. \\
 \bottomrule
 \end{tabularx}
 
 
 \paragraph{Rationale for Decisions}
-T12. Same rational as T6. 
-\\
-Decision made to submit XXXX bot
+\begin{itemize}[leftmargin=1.5em]
+  \item T12. Same rationale as T6. 
+  \item Decision made to submit XXXX bot
+\end{itemize}
 }
 
 \bigskip
@@ -545,7 +514,7 @@ None (Collectively finalised project).
 % ---- Example rows (delete or overwrite) ----
 21/11/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Defined Individual Approaches. \\
 25/11/2025, 13:00 & Room & Ben, Naddy, David, Daniel & Started work on current approaches, discussed methods of implementation. \\
-28/11/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Submitted Performa and continued work on current approaches, updated teammates on progress. \\
+28/11/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Submitted Proforma and continued work on current approaches, updated teammates on progress. \\
 2/12/2025, 13:00 & Room & Ben, Naddy, Daniel & Continued work on current approaches, updated teammates on progress. Decided to remove Alpha Beta from scope. \\
 05/12/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Created Powerpoint. \\
 08/12/2025, 13:00 & Hybrid & Ben, Naddy, David, Daniel & Finalised and Practiced Powerpoint \\
@@ -577,6 +546,9 @@ Describe what method your bot used. For example:
   \item How the components interact
 \end{itemize}
 }
+\paragraph{
+  TODO
+}
 
 \subsection{Technical Details}
 \mytodo{
@@ -588,6 +560,9 @@ Provide more detail here, such as:
   \item Evaluation strategy and results
 \end{itemize}
 }
+\paragraph{
+  TODO
+}
 
 \subsection{Unique Aspects and Strengths}
 \mytodo{
@@ -598,6 +573,9 @@ Explain what made your bot \emph{strong and powerful}:
   \item Robustness, efficiency, scalability, etc.
 \end{itemize}
 }
+\paragraph{
+  TODO
+}
 
 \subsection{Limitations and Possible Improvements}
 \mytodo{
@@ -606,6 +584,9 @@ Briefly acknowledge:
   \item Known weaknesses or failure cases
   \item Improvements you would make with more time
 \end{itemize}
+}
+\paragraph{
+  TODO
 }
 
 % ---------- Signatures ----------
@@ -618,10 +599,10 @@ Each member of the group should sign this section with their name and student ID
 \toprule
 \textbf{Name} & \textbf{Student ID} & \textbf{Signature / Confirmation} \\
 \midrule
-\mytodo{Member 1 Name} & \mytodo{12345678} & I confirm the above description of the method and my contribution. \\
-\mytodo{Member 2 Name} & \mytodo{23456789} & I confirm the above description of the method and my contribution. \\
-\mytodo{Member 3 Name} & \mytodo{34567890} & I confirm the above description of the method and my contribution. \\
-\mytodo{Member 4 Name} & \mytodo{45678901} & I confirm the above description of the method and my contribution. \\
+\mytodo{Ben} & \mytodo{11019777} & I confirm the above description of the method and my contribution. \\
+\mytodo{Naddy} & \mytodo{11011468} & I confirm the above description of the method and my contribution. \\
+\mytodo{David} & \mytodo{11054893} & I confirm the above description of the method and my contribution. \\
+\mytodo{Daniel} & \mytodo{11017362} & I confirm the above description of the method and my contribution. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
