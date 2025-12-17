@@ -35,7 +35,7 @@
   \item \textbf{Academic Year:} 2025--26
   \item \textbf{Student Name:} \mytodo{Benjamin H Kidd}
   \item \textbf{Student ID:} \mytodo{11019777}
-  \item \textbf{Group:} \mytodo{Your Group Number}
+  \item \textbf{Group:} \mytodo{24}
   \item \textbf{Deadline:} 19th December, 2pm
   \item \textbf{Note:} Each student must submit their own copy. No anonymous submissions.
 \end{itemize}
@@ -58,19 +58,25 @@
 \subsection{Summary of My Contributions}
 % Replace the text below with your own content.
 \mytodo{In this section, describe clearly and honestly what \textbf{you} have done for the project so far.  Mention specific tasks, responsibilities, and any deliverables you produced.}
+\mytodo{From an administative perspective, I developed the DeepLearning and AlphaZero slides in the powerpoint, and managed the group log creation during meetings. \\\\
+From a project perspective, first I developed the ValidNaiveAgent, which was an initial upgraded Naive agent, that plays random moves, which are always valid. This is useful as a simple evaluation for bots. \\\\
+I then worked on the AlphaZero style approach. I created a AlphaZero bot from scratch, including MCTS, the model and its training. I also handled the training of this bot, and got it to beat the ValidNaiveAgent 10/10 times. Lots of work went into trying to make the training as efficient as possible. The model consistent of 2 input layers, some RNN which were trained, as 2 output, 1 policy (for the moves), and 1 value (for the board). \\\\
+During this, I used a single board view approach, transposing boards if the player was blue, so thaty the AI only had to learn one players role (red, connecting top to bottom). \\\\
+In order to improve the model, first I implement biased rewards to shorter games, with the attempt to get the AI to favour taking shorter paths to win. Retraining the model, this did work, but not as well as hoped. \\\\
+Noticing that the AI had trouble finishing games, I utilised Minimax, implementing a 'game solver' which used Alpha-Beta Min-Max to a maximum depth, in order to try and find winning moves. The depth is set to increase wiht the number of moves played, effectively allowing more depth when the computation was small enough. The solver was implemented at the start of the move, so that a check was done for any winning moves, or future losing moves. If one was found, it would be played, to either win or stop from losing. If not, the normal AlphaZero approach was used.\\\\
+The AI was learning well, but would require millions of games to play up to modern standards. First I implemented some supervised learning for initial training, similar to the original AlphaGo. This consisted of games generated through the KataHex modern model, then used for initial training, before the reinforcement learning was done.\\\\
+This performed well, but couldn't learn the full weights, or get anywhere close within the few number of supervised learning (1011) games. The discussion board showed that we were allowed to use a pre-trained model, so I implememt a new version of the agent that utilizes KataHex to choose next moves. This worked similar to generating the games when supervised learning, but involved starting a KataHex subprocess, and playing moves to represent the board state on it, then having that generate the next move. This used Hex GTP for communication. Work went into this to make the board representation and communication with the process efficient and error proof. \\\\
+I noticed that this model had the same problem as my own model around finishing games. As such, I added the same Minimax style move solver to it, in order to finish games where solutions were known. This produced very strong performance against all bots it played against.
+}
 
 \subsection{Reflection on Group Work}
-% Replace the text below with your own content.
 \mytodo{
-Reflect on how the group is functioning:
 \begin{itemize}[leftmargin=1.5em]
-  \item Communication within the group
-  \item How meetings are organised and run
-  \item How fairly work is divided
-  \item Any challenges and how you are addressing them
+  \item Communication within the group was managed through a group chat on the platform "Discord". This is a platform used regularly by all 4 members of the team, so it was obvious to be a good platform for communication. Communication on this was mainly used for collaboration of ideas during tasks, and for organising workload/meetings. Sometimes it was hard to get hold of some team members since they were busy. By the end of the project, we had a rough idea of who was busy when, but it might have been useful to define specific times outside of meetings where people would be avaliable for communication if required, or would be able to check communication platforms.
+  \item Meetings were managed by going over the work each team member had completed during there tasks, and discussing any issues. When teamwork was required, e.g. the presentation, the team spent individual meetings collaborating on the submission. There was no specific team lead. We agreed initially on two meetings a week, with more taking place when required around submissions. This initial agreemeant allowed most team members to be present at most meetings. As is the case with most teams, sometimes members were unavaliable for meetings. We tried to mitigate this by agreeing on meeting times initially in order to capitalize on the times people were free. When members weren't avaliable they were to inform the group as soon as possible, in order to allow the team to work around that, and they understood that they may need to complete tasks assigned to them at the meetings.
+  \item Work was hard to divide fairly, due to the unknown amount of work required for individual tasks. At the beginning of the project, we defined the major approaches we would take. Following this, each team member was responsible for managing their own workload, varying based on what was required of their approach, and how these requirements changed. Due to the nature of this coursework, with agents simply needing to "get better", it was hard to compare the amount of time spent by individual team members on their individual approachs. It may have been a better approach to utilise some form of collaborative agile methodology, with specific goals, which would have helped to ensure each team member had similar amounts of work to do, and would help with deadlining tasks.
+  \item One of the main challanges we faced, was the differing workloads each team member had during the coursework. Each member has different course units, and as such has differing deadlines. This meant that the amount of time each member could spend on this coursework varied week on week. As a group, we tried to be understanding of other deadlines, trusting members to get their work done when they had time, rather than in a certain period, however this did often mean that deadlines overran. It might have been better to define hard deadlines earlier on in the planning phase, allowing team members to plan their time accordingly. 
 \end{itemize}
-
-You should be honest but constructive, bearing in mind that other group members may read this.
 }
 
 \subsection{Personal Development}
@@ -79,8 +85,12 @@ You should be honest but constructive, bearing in mind that other group members 
 Comment on:
 \begin{itemize}[leftmargin=1.5em]
   \item Skills you are developing (technical, organisational, communication, etc.)
-  \item What you have learned about working in a team
-  \item How you plan to improve your contribution in the next phase
+  \item One of the main skills I developed was my analysis for continuous improvement ability. Typically, I am very good at planning and initially creating something strong, but then I struggle to notice the problems in my approach, instead finding excuses for them. This leads me to stop improving on my system. This project forced me to go beyond the intial project, following it up with iterative improvements, ensuring that the initial problems weren't simply excused, but fixed and improved on. This also required the ability to handle scope creep, as improvement tasks grew, ensuring that while the system was improvemed, it was also delivered on time.
+  \item Another skill that I significantly developed was my ability to explain technical consepts in a non-technical way. Normally after a technical implementation, I am so proud of my implementation, that I want to share every little bit of it. However during this project, due to the time limit, I had to reduce the amount of information I was sharing to the high-level understanding.
+  \item Working in a team always produces different challanges. I've learnt from this project that sometimes having flexible deadlines produces the opposite affect to the indended one. Instead of allowing team members ot do work when they can, this work sometimes just gets pushed back and back until a hard deadline is hit, almost doubling the stress. 
+  \item While this is not new information, this project has only furthered my understanding that communication (specifically open communication) is key to ensuring teams perform well. It allows members to feel comfortable explaining issues they are having, before its too late to do anything about them.
+  \item While this project is now over, if I had to do it again, I would try to spend more time researching avaliable approaches initially. If this had been done, we could have immediately moved towards only the MCTS and AlphaZero style approach, focussing our attention from the start on the most promising areas for development. This would allow individuals to work on specific optimizations, as opposed to it being left ot one person.
+  \item If I could do it again, I would also confirm the task specifications earlier. If I had initially asked if pre-trained models were allowed, I could have skipped the time spent training models from scratch, and instead fine-tuned a model with specific optimisations to produce the best final outcome.
 \end{itemize}
 }
 
@@ -229,27 +239,7 @@ Briefly explain what led to the decisions taken at this meeting. For example:
 \end{itemize}
 
 \paragraph{Tasks Agreed}
-Use the following format to list tasks assigned during the meeting.
-% For clarity, use a table.
-
-\begin{tabularx}{\textwidth}{@{} l l l X @{}}
-\toprule
-\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
-\midrule
-T1 & Member A & DD/MM & Short description of the task \\
-T2 & Member B & DD/MM & Short description of the task \\
-T3 & Member C & DD/MM & Short description of the task \\
-% Add more rows as needed
-\bottomrule
-\end{tabularx}
-
-\paragraph{Rationale for Decisions}
-Briefly explain what led to the decisions taken at this meeting. For example:
-\begin{itemize}[leftmargin=1.5em]
-  \item Why particular tasks were prioritised
-  \item Any alternatives considered
-  \item How the group reached agreement
-\end{itemize}
+None (Collectively wrote and submitted the group performa).
 }
 
 \bigskip
@@ -311,20 +301,13 @@ Use the following format to list tasks assigned during the meeting.
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T1 & Member A & DD/MM & Short description of the task \\
-T2 & Member B & DD/MM & Short description of the task \\
-T3 & Member C & DD/MM & Short description of the task \\
+T5 & Ben & 09/12 & Implement prioritisation to fasting winning games. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
 
 \paragraph{Rationale for Decisions}
-Briefly explain what led to the decisions taken at this meeting. For example:
-\begin{itemize}[leftmargin=1.5em]
-  \item Why particular tasks were prioritised
-  \item Any alternatives considered
-  \item How the group reached agreement
-\end{itemize}
+The AlphaZero approach was winning consistently, but was taking almost full boards to win.
 }
 
 \bigskip
@@ -380,7 +363,25 @@ None (Collectively wrote the group powerpoint).
 \end{itemize}
 
 \paragraph{Tasks Agreed}
-None (Finalised and practiced group powerpoint).
+\paragraph{Tasks Agreed}
+Use the following format to list tasks assigned during the meeting.
+% For clarity, use a table.
+
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+\toprule
+\textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
+\midrule
+T6 & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game endings. \\
+% Add more rows as needed
+\bottomrule
+\end{tabularx}
+
+
+\paragraph{Rationale for Decisions}
+T6. Game endings were struggling to be found, sometimes with the AI having a winning board state but never playing it. Minimax used at the start of the move to check up to a given depth (which increases based on the number of moves played to keep compute power reasonable), playing winning moves if found, or blocking moves if opponent winning moves found. If no certain win/loss moves are found, normal AlphaZero is used.
+\\
+All Finalised and practiced group powerpoint.
+
 }
 
 \bigskip
@@ -414,21 +415,14 @@ Use the following format to list tasks assigned during the meeting.
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T1 & Member A & DD/MM & Short description of the task \\
-T2 & Member B & DD/MM & Short description of the task \\
-T3 & Member C & DD/MM & Short description of the task \\
+T7 & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learning. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
 
 
 \paragraph{Rationale for Decisions}
-Briefly explain what led to the decisions taken at this meeting. For example:
-\begin{itemize}[leftmargin=1.5em]
-  \item Why particular tasks were prioritised
-  \item Any alternatives considered
-  \item How the group reached agreement
-\end{itemize}
+T7. While the model was learning well, it would take lots of games to get strong. Utilise known good games to train the AI initially, hoping it will pick up on some good initial patterns/weights.
 }
 
 \bigskip
@@ -463,21 +457,14 @@ Use the following format to list tasks assigned during the meeting.
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T1 & Member A & DD/MM & Short description of the task \\
-T2 & Member B & DD/MM & Short description of the task \\
-T3 & Member C & DD/MM & Short description of the task \\
+T8 & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it, to avoid extensive training being required. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
 
 
 \paragraph{Rationale for Decisions}
-Briefly explain what led to the decisions taken at this meeting. For example:
-\begin{itemize}[leftmargin=1.5em]
-  \item Why particular tasks were prioritised
-  \item Any alternatives considered
-  \item How the group reached agreement
-\end{itemize}
+T8. While AlphaZero was learning correctly, it would need massive amounts of computing power to train to a decent level. Sicne the discussion board says we can use pre-trained models, I implement a bot based on the existing KataHex model.
 }
 
 \bigskip
@@ -512,15 +499,18 @@ Use the following format to list tasks assigned during the meeting.
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T1 & Ben (1101977) & 18/12 & Complete their journal version \\
-T2 & Naddy (11011468) & 18/12 & Complete their journal version \\
-T3 & David (11054893) & 18/12 & Complete their journal version \\
-T4 & Daniel (11017362) & 18/12 & Complete their journal version \\
+T8 & Ben (1101977) & 18/12 & Complete their journal version \\
+T9 & Naddy (11011468) & 18/12 & Complete their journal version \\
+T10 & David (11054893) & 18/12 & Complete their journal version \\
+T11 & Daniel (11017362) & 18/12 & Complete their journal version \\
+T12 & Ben & 18/12 & In the same way as with the AlphaZero approach, add Minimax for KataHex. \\
 \bottomrule
 \end{tabularx}
 
 
 \paragraph{Rationale for Decisions}
+T12. Same rational as T6. 
+\\
 Decision made to submit XXXX bot
 }
 
@@ -579,8 +569,8 @@ None (Collectively finalised project).
 05/12/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Created Powerpoint. \\
 08/12/2025, 13:00 & Hybrid & Ben, Naddy, David, Daniel & Finalised and Practiced Powerpoint \\
 09/12/2025, 13:00 & Room & Naddy, David, Daniel & Continued work on current approaches, updated teammates on progress. \\
-12/12/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Continued work on current approaches, updated teammates on progress. \\
-15/12/2025, 13:00 & Hybrid & Ben, Naddy, David, Daniel & Compared bots and finlised log \\
+12/12/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Continued work on current approaches, updated teammates on progress. Started work on KataHex approach. \\
+15/12/2025, 13:00 & Hybrid & Ben, Naddy, David, Daniel & Compared bots and finalised log. Added final MiniMax improvements to KataHex agent. \\
 18/12/2025, 12:00 & Hybrid & Ben, Naddy, David, Daniel & Finalised everything for submission \\
 % Add more rows as needed
 
@@ -650,6 +640,7 @@ Each member of the group should sign this section with their name and student ID
 \mytodo{Member 1 Name} & \mytodo{12345678} & I confirm the above description of the method and my contribution. \\
 \mytodo{Member 2 Name} & \mytodo{23456789} & I confirm the above description of the method and my contribution. \\
 \mytodo{Member 3 Name} & \mytodo{34567890} & I confirm the above description of the method and my contribution. \\
+\mytodo{Member 4 Name} & \mytodo{45678901} & I confirm the above description of the method and my contribution. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
