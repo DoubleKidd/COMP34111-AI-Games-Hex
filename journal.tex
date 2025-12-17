@@ -242,6 +242,7 @@ T6 & Daniel & 02/12 & Create a visualiser for the evaluation function. \\
 \midrule
 TX & All & 07/12 & Create and fill out our presentation. \\
 TX & Naddy & 09/12 & Run some experiments with the MCTS implementation. \\
+TX & Daniel & 09/12 & Tune heuristics used in evaluation function. Determine if alpha beta is worthwhile spending time on. \\
 TX & Ben & 09/12 & Implement prioritisation to speed up winning games. \\
 % Add more rows as needed
 \bottomrule
@@ -251,6 +252,7 @@ TX & Ben & 09/12 & Implement prioritisation to speed up winning games. \\
 \begin{itemize}[leftmargin=1.5em]
   \item Our presentation is coming up soon and we want to get it done sooner rather than later, so it won't get in the way of making our models.
   \item The presentation requires some experimental results so ideally the vanilla MCTS implementation should be working and winning before then.
+  \item The current heuristics were very simple, and we need a way to score patterns. Even so, alpha beta might not be promising enough.
   \item The AlphaZero approach was winning consistently, but was taking almost full boards to win.
 \end{itemize}
 }
@@ -316,6 +318,7 @@ None (Collectively wrote the group powerpoint).
 \midrule
 TX & All & 09/12 & Script and rehearse the presentation. \\
 TX & Naddy & 11/12 & Look into implementing RAVE or other optimisations for MCTS. \\
+TX & Daniel & 11/12 & Create bitmasks for common patterns to speed up recognition of said patterns. \\
 TX & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game endings. \\
 % Add more rows as needed
 \bottomrule
@@ -326,6 +329,7 @@ TX & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game e
 \begin{itemize}[leftmargin=1.5em]
   \item We need to ensure we're within the time limit of the presentation to get everyone's input.
   \item MCTS was not quick enough at finding optimal moves on a board as big as 11x11.
+  \item Evaluation was slow when ran with alpha beta minimax, bit manipulation operations would speed it up significantly.
   \item Game endings were struggling to be found, sometimes with the AI having a winning board state but never playing it. Minimax used at the start of the move to check up to a given depth (which increases based on the number of moves played to keep compute power reasonable), playing winning moves if found, or blocking moves if opponent winning moves found. If no certain win/loss moves are found, normal AlphaZero is used.
 \end{itemize}
 }
@@ -360,6 +364,7 @@ TX & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game e
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
+TX & Daniel & 11/12 & Explore any other potential approaches. \\
 TX & Naddy & 14/12 & Run optimised MCTS implementation against other models. \\
 TX & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learning. \\
 % Add more rows as needed
@@ -370,6 +375,7 @@ TX & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learn
 \paragraph{Rationale for Decisions}
 \begin{itemize}[leftmargin=1.5em]
   \item This will be done to find the MCTS implementation's weaknesses, and to give guidance on what to focus a heuristic on.
+  \item Minimax approach not promising, explore any other potential approaches we havent considered.
   \item While the model was learning well, it would take lots of games to get strong. Utilise known good games to train the AI initially, hoping it will pick up on some good initial patterns/weights.
 \end{itemize}
 }
@@ -406,6 +412,7 @@ TX & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learn
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
 TX & Naddy & 16/12 & Research further optimisations for the MCTS implementation and add them.  \\
+TX & Daniel & 16/12 & Apply h-search and minimax optimisations to MCTS approach.
 TX & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it, to avoid extensive training being required. \\
 % Add more rows as needed
 \bottomrule
@@ -415,6 +422,7 @@ TX & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it
 \paragraph{Rationale for Decisions}
 \begin{itemize}[leftmargin=1.5em]
   \item The MCTS implementation is performing decently, but it still takes too long per turn to reach that point. May considering moving away from python.
+  \item H search would help optimise MCTS expansion policy.
   \item TX. While AlphaZero was learning correctly, it would need massive amounts of computing power to train to a decent level. Sicne the discussion board says we can use pre-trained models, I implement a bot based on the existing KataHex model.
 \end{itemize}
 }
@@ -517,10 +525,10 @@ None (Collectively finalised project).
 21/11/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Defined Individual Approaches. \\
 25/11/2025, 13:00 & Room & Ben, Naddy, David, Daniel & Started work on current approaches, discussed methods of implementation. \\
 28/11/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Submitted Proforma and continued work on current approaches, updated teammates on progress. \\
-2/12/2025, 13:00 & Room & Ben, Naddy, Daniel & Continued work on current approaches, updated teammates on progress. Decided to remove Alpha Beta from scope. \\
+2/12/2025, 13:00 & Room & Ben, Naddy, Daniel & Continued work on current approaches, updated teammates on progress. Considering removing Alpha Beta from scope.\\
 05/12/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Created Powerpoint. \\
 08/12/2025, 13:00 & Hybrid & Ben, Naddy, David, Daniel & Finalised and Practiced Powerpoint \\
-09/12/2025, 13:00 & Room & Naddy, David, Daniel & Continued work on current approaches, updated teammates on progress. \\
+09/12/2025, 13:00 & Room & Naddy, David, Daniel & Continued work on current approaches, updated teammates on progress. Decided to remove Alpha Beta from scope.\\
 12/12/2025, 10:00 & Room & Ben, Naddy, David, Daniel & Continued work on current approaches, updated teammates on progress. Started work on KataHex approach. \\
 15/12/2025, 13:00 & Hybrid & Ben, Naddy, David, Daniel & Compared bots and finalised log. Added final MiniMax improvements to KataHex agent. \\
 18/12/2025, 12:00 & Hybrid & Ben, Naddy, David, Daniel & Finalised everything for submission \\
