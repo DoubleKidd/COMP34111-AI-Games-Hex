@@ -127,8 +127,8 @@ Comment on:
 T1 & Ben & 12/12 & Utilize an Alpha Zero Approach, using MCTS \& Deep Learning. \\
 T2 & Daniel & 09/12 & Evalutation function. \\
 T3 & Daniel & 12/12 & Alpha Beta. \\
-T4 & Naddy \& David  & 12/12 & Manual MCTS (Policy Selection, etc). \\
-T5 & David & Explore evolutionary stategies for Deep learning  \\
+T4 & Naddy & 12/12 & Manual MCTS (Policy Selection, etc). \\
+T5 & David & 12/12 & Explore evolutionary stategies for Deep learning  \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
@@ -136,8 +136,7 @@ T5 & David & Explore evolutionary stategies for Deep learning  \\
 \paragraph{Rationale for Decisions}
 \begin{itemize}[leftmargin=1.5em]
   \item Separating individual approaches allowed for the most parallelisation of work.
-  \item We felt that within the unit, the main approaches available were AlphaBeta (MiniMax), MCTS and AlphaGo (AlphaZero), which could be expanded on using other approaches. We decided to attempt all of these, and then evaluate which performed the best at the end.
-  \item Tasks were divided based on interest and location. David and Naddy live together so it made sense for them to share MCTS. This was considered the largest task, and most important as it could utilise approaches from others (e.g. evalutation functions, trained neural networks).
+  \item We felt that within the unit, the main approaches available were AlphaBeta (MiniMax), MCTS and AlphaGo (AlphaZero), which could be expanded on using other approaches including the evaluation and evolution strategies. We decided to attempt all of these, and then evaluate which performed the best at the end.
 \end{itemize}
 }
 
@@ -199,9 +198,9 @@ None (Collectively wrote and submitted the group proforma).
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-T5 & Naddy & 30/11 & Research relevant papers on how to implement MCTS in Hex. \\
-T6 & Daniel & 02/12 & Create a visualiser for the evaluation function. \\
-T6 & David & 02/12 & Research relevant papers and start work towards an implementation of a genetic stragegy \\
+T6 & Naddy & 30/11 & Research relevant papers on how to implement MCTS in Hex. \\
+T7 & Daniel & 02/12 & Create a visualiser for the evaluation function. \\
+T8 & David & 02/12 & Research relevant papers and start work towards an implementation of a genetic strategy \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
@@ -245,11 +244,11 @@ T6 & David & 02/12 & Research relevant papers and start work towards an implemen
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-TX & All & 07/12 & Create and fill out our presentation. \\
-TX & Naddy & 09/12 & Run some experiments with the MCTS implementation. \\
-TX & Daniel & 09/12 & Tune heuristics used in evaluation function. Determine if alpha beta is worthwhile spending time on. \\
-TX & Ben & 09/12 & Implement prioritisation to speed up winning games. \\
-TX & David & 09/12 & Implement simple neural agent and look into strategies to evolve it \\
+T9 & All & 07/12 & Create and fill out our presentation. \\
+T10 & Naddy & 09/12 & Run some experiments with the MCTS implementation. \\
+T11 & Daniel & 09/12 & Tune heuristics used in evaluation function. Determine if alpha beta is worthwhile spending time on. \\
+T12 & Ben & 09/12 & Implement prioritisation to imply smaller games are better. \\
+T13 & David & 09/12 & Implement simple neural agent and look into strategies to evolve it \\
 
 % Add more rows as needed
 \bottomrule
@@ -261,6 +260,7 @@ TX & David & 09/12 & Implement simple neural agent and look into strategies to e
   \item The presentation requires some experimental results so ideally the vanilla MCTS implementation should be working and winning before then.
   \item The current heuristics were very simple, and we need a way to score patterns. Even so, alpha beta might not be promising enough.
   \item The AlphaZero approach was winning consistently, but was taking almost full boards to win.
+  \item The AI often takes full games when it could win in fewer moves, so we should prioritise winning faster. Thus I reward the AI more for winning in fewer moves.
 \end{itemize}
 }
 
@@ -323,10 +323,10 @@ None (Collectively wrote the group powerpoint).
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-TX & All & 09/12 & Script and rehearse the presentation. \\
-TX & Naddy & 11/12 & Look into implementing RAVE or other optimisations for MCTS. \\
-TX & Daniel & 11/12 & Create bitmasks for common patterns to speed up recognition of said patterns. \\
-TX & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game endings. \\
+T14 & All & 09/12 & Script and rehearse the presentation. \\
+T15 & Naddy & 11/12 & Look into implementing RAVE or other optimisations for MCTS. \\
+T16 & Daniel & 11/12 & Create bitmasks for common patterns to speed up recognition of said patterns. \\
+T17 & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game endings. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
@@ -371,9 +371,10 @@ TX & Ben & 15/12 & Implement a minimax checker for AlphaZero to help with game e
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-TX & Daniel & 11/12 & Explore any other potential approaches. \\
-TX & Naddy & 14/12 & Run optimised MCTS implementation against other models. \\
-TX & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learning. \\
+T18 & Daniel & 11/12 & Explore any other potential approaches. \\
+T19 & Naddy & 14/12 & Run optimised MCTS implementation against other models. \\
+T20 & Naddy & 14/12 & Replace random rollouts with heuristic-based rollouts. \\
+T21 & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learning. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
@@ -381,8 +382,8 @@ TX & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learn
 
 \paragraph{Rationale for Decisions}
 \begin{itemize}[leftmargin=1.5em]
-  \item This will be done to find the MCTS implementation's weaknesses, and to give guidance on what to focus a heuristic on.
   \item Minimax approach not promising, explore any other potential approaches we havent considered.
+  \item This will be done to find the MCTS implementation's weaknesses, and to give guidance on what to focus a heuristic on.
   \item While the model was learning well, it would take lots of games to get strong. Utilise known good games to train the AI initially, hoping it will pick up on some good initial patterns/weights.
 \end{itemize}
 }
@@ -418,9 +419,9 @@ TX & Ben & 15/12 & Utilise Supervised Learning (AlphaGo style) for initial learn
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-TX & Naddy & 16/12 & Research further optimisations for the MCTS implementation and add them.  \\
-TX & Daniel & 16/12 & Apply h-search and minimax optimisations to MCTS approach.
-TX & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it, to avoid extensive training being required. \\
+T22 & Naddy & 16/12 & Research further optimisations for the MCTS implementation and add them.  \\
+T23 & Daniel & 16/12 & Apply h-search and minimax optimisations to MCTS approach. \\
+T24 & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it, to avoid extensive training being required. \\
 % Add more rows as needed
 \bottomrule
 \end{tabularx}
@@ -430,7 +431,7 @@ TX & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it
 \begin{itemize}[leftmargin=1.5em]
   \item The MCTS implementation is performing decently, but it still takes too long per turn to reach that point. May considering moving away from python.
   \item H search would help optimise MCTS expansion policy.
-  \item TX. While AlphaZero was learning correctly, it would need massive amounts of computing power to train to a decent level. Sicne the discussion board says we can use pre-trained models, I implement a bot based on the existing KataHex model.
+  \item While AlphaZero was learning correctly, it would need massive amounts of computing power to train to a decent level. Since the discussion board says we can use pre-trained models, I implement a bot based on the existing KataHex model.
 \end{itemize}
 }
 
@@ -465,19 +466,19 @@ TX & Ben & 18/12 & Utilise existing KataHex model since the coursework allows it
 \toprule
 \textbf{Task ID} & \textbf{Responsible} & \textbf{Due Date} & \textbf{Description} \\
 \midrule
-TX & Ben (1101977) & 18/12 & Complete their journal version \\
-TX & Naddy (11011468) & 18/12 & Complete their journal version \\
-TX & David (11054893) & 18/12 & Complete their journal version \\
-TX & Daniel (11017362) & 18/12 & Complete their journal version \\
-TX & Ben & 18/12 & In the same way as with the AlphaZero approach, add Minimax for KataHex. \\
+T25 & Ben (1101977) & 18/12 & Complete their journal version \\
+T26 & Naddy (11011468) & 18/12 & Complete their journal version \\
+T27 & David (11054893) & 18/12 & Complete their journal version \\
+T28 & Daniel (11017362) & 18/12 & Complete their journal version \\
+T29 & Ben & 18/12 & In the same way as with the AlphaZero approach, add Minimax for KataHex. \\
 \bottomrule
 \end{tabularx}
 
 
 \paragraph{Rationale for Decisions}
 \begin{itemize}[leftmargin=1.5em]
-  \item T12. Same rationale as T6. 
-  \item Decision made to submit XXXX bot
+  \item T29. Same rationale as T17 to help with endgames.
+  \item Decision made to submit KataHex bot. The best bots were AlphaZero, MCTS and KataHex. MCTS beat AlphaZero most of the time, but KataHex beat both all the time.
 \end{itemize}
 }
 
@@ -563,9 +564,12 @@ Describe what method your bot used. For example:
   \item How the components interact
 \end{itemize}
 }
-\paragraph{
-  TODO
-}
+\paragraph{}
+  We originally implemented four different approaches to the problem: vanilla MCTS, an AlphaZero-based approach, alphabeta minimax, and evolutionary strategies for training a simple neural network. 
+  After testing, we found that the AlphaZero approach was the strongest, so we focused on improving that further. The other approaches all had various issues, such as being too slow (minimax), not strong enough (evolutionary strategies), or not optimised enough (vanilla MCTS).
+  However our implementation of AlphaZero also struggled to win games often enough due to a lack of training time, so we decided to use an existing pre-trained model from KataHex instead, adding minimax for endgame scenarios to improve its performance further.
+  KataHex uses a similar approach to AlphaZero, using a combination of MCTS and a neural network to evaluate the game state and select moves.
+  The minimax addition helps it to find winning sequences of moves in the endgame more reliably, as this is the point at which the board is solvable.
 
 \subsection{Technical Details}
 \mytodo{
@@ -577,9 +581,15 @@ Provide more detail here, such as:
   \item Evaluation strategy and results
 \end{itemize}
 }
-\paragraph{
-  TODO
-}
+\paragraph{\textbf{Model Architecture:}} The agent runs the \texttt{hex3\_27x\_b28.bin.gz} model. The \texttt{b28} designation indicates a deep network architecture consisting of 28 residual blocks, allowing for high-level abstraction and long-term strategic pattern recognition compared to shallower networks.
+
+\paragraph{\textbf{Input Representation:}} The agent maps the assignment's internal 11x11 board representation to standard GTP commands. It handles coordinate translation (mapping 0--10 indices to A--L/1--11) and dynamically maps the framework's \texttt{Colour.BLUE} and \texttt{Colour.RED} to KataHex's black and white roles.
+
+\paragraph{\textbf{Configuration \& Tuning:}} Significant tuning was performed on \texttt{config.cfg} to adapt the engine for the CPU-constrained Docker environment. Key MCTS parameters were adjusted, including setting \texttt{cpuctExploration} to 0.9 to balance search exploration. Hardware limits were enforced by reducing \texttt{numSearchThreads} to 6, limiting \texttt{nnCacheSizePowerOfTwo} to 22, and strictly capping \texttt{maxTime} at 2.0 seconds.
+
+\paragraph{\textbf{Dynamic Solver Depth:}} To balance accuracy with speed, the HexSolver calculates search depth dynamically using the formula $\text{depth} = \log(\text{Budget}) / \log(\text{BranchingFactor})$. This allows the solver to search deeper in the endgame (up to full board solution) while remaining shallow in the opening.
+
+
 
 \subsection{Unique Aspects and Strengths}
 \mytodo{
@@ -590,9 +600,16 @@ Explain what made your bot \emph{strong and powerful}:
   \item Robustness, efficiency, scalability, etc.
 \end{itemize}
 }
-\paragraph{
-  TODO
-}
+
+\subsection{Unique Aspects and Strengths}
+
+\paragraph{\textbf{Pre-trained Deep Neural Network Advantage:}} Unlike approaches requiring extensive training from scratch, our implementation leverages KataHex's 28-block ResNet pre-trained on millions of expert games and self-play iterations. This ``warm-started'' model immediately provided strong positional understanding, allowing the bot to recognize winning patterns and strategic formations that would take conventional MCTS thousands of simulations to discover.
+
+\paragraph{\textbf{Hybrid Stragegy (Neural Network + Minimax Solver):}} While deep neural networks excel at long-term strategic planning, they occasionally miss immediate tactical ``kill shots''---forced winning sequences that end the game in a handful of moves. Our hybrod approach addresses this weakness by using a simple Minimax solver with depth calculations to identify guaranteed forced wins. The solver uses a scoring heuristic (1000 - depth) to prefer faster victories, which we found that KataHex would often overlook. This combination ensures that we are leveraging the full strageic advantage that KataHex provides, while guaranteeing that it does not lose in otherwise obvious scenarios, especially in the endgame.
+
+\paragraph{\textbf{CPU-Constrained Optimization:}} To optimise runtime and to improve model speed, we configured KataHex to run efficiently using the CPU constraned docker container. By tuning parameters such as cache size, number of threads to utilise, we ensured that the most of the available resources were used, maximising the number of simulations we could run per turn within the strict time limit.  
+
+\paragraph{\textbf{Robust runtime}} To ensure that longer runs would be able to be completed, we implemented a fail-safe mechanism that would ensure that the model would keep running, and restarting it if it had crashed. This was achieved by rerunning the model using the previous board states, allowing it to continue from where it has left off.
 
 \subsection{Limitations and Possible Improvements}
 \mytodo{
@@ -602,10 +619,9 @@ Briefly acknowledge:
   \item Improvements you would make with more time
 \end{itemize}
 }
-\paragraph{
-  TODO
-}
+\paragraph{\textbf{Time Management Overhead:}} The fail-safe synchronization logic introduces slight latency during complex board states. In extremely tight time controls, the overhead of re-launching the process if it crashes could risk a timeout.
 
+\paragraph{\textbf{Opening Book:}} The bot currently relies on the neural network for opening moves (Turn 1--2). Implementing a hard-coded opening book for the ``Swap'' phase could save time and ensure optimal play against non-standard openings.
 % ---------- Signatures ----------
 \subsection{Group Member Signatures}
 Each member of the group should sign this section with their name and student ID.
