@@ -2,7 +2,7 @@ from copy import deepcopy
 import random
 from typing import Callable, Self
 
-from agents.Naddy.simulate import action, actions, simulate, state_to_result
+from agents.Naddy.simulate import action_random, action_connect, generate_actions, simulate, state_to_result
 from src.Board import Board
 from src.Colour import Colour
 from src.Move import Move
@@ -25,9 +25,11 @@ class Node:
         self.parent = parent
 
         self.children: set[Self] = set()
+        self.expanded = False
         self.visits = 0
         self.result = 0
-        self.expanded = False
+        self.rave_result = {}
+        self.rave_visits = {}
 
     def has_children(self) -> bool:
         return len(self.children) > 0
@@ -37,14 +39,14 @@ class Node:
 
     def simulate(self) -> tuple[Board, float]:
         """Simulate from the node's state and return the outcome."""
-        simulation = simulate(self.state, self.colour.opposite())
+        simulation, moves_played = simulate(self.get_state(), self.colour.opposite())
         result = state_to_result(simulation, self.colour)
-        return simulation, result
+        return simulation, result, moves_played
 
     def expand(self) -> Self | None:
         """Generate child nodes from the current node's state."""
         self.expanded = True
-        possible_moves = actions(self.get_state())
+        possible_moves = generate_actions(self.get_state())
         if possible_moves == []:
             return None
 
@@ -59,7 +61,6 @@ class Node:
             self.children.add(child_node)
 
         chosen_child = random.choice(list(self.children))
-        chosen_child.get_state()
         return chosen_child
 
     def get_state(self) -> Board:
@@ -78,13 +79,23 @@ class Node:
 
         return policy_func(self.children)
 
-    def backpropagate(self, result: float):
-        """Update reward and visits and propagate."""
+    def backpropagate(self, result: float, moves_played: list[Move] = None):
+        """Update reward and visits and propagate, including RAVE statistics."""
         self.visits += 1
         self.result += result
 
+        # RAVE statistics
+        if moves_played:
+            for move in moves_played:
+                move_key = str(move)
+                if move_key not in self.rave_visits:
+                    self.rave_visits[move_key] = 0
+                    self.rave_result[move_key] = 0
+                self.rave_visits[move_key] += 1
+                self.rave_result[move_key] += result
+
         if self.parent:
-            self.parent.backpropagate(1 - result)
+            self.parent.backpropagate(1 - result, moves_played)
 
     def visualise_tree(self, depth: int = 0):
         """Prints a visual representation of the tree from the given node."""
@@ -93,5 +104,11 @@ class Node:
         for child in self.children:
             child.visualise_tree(depth + 1)
 
+    def __repr__(self):
+        return f"Node :: {self.move} with {self.colour} on T{self.turn} :: {self.result} / {self.visits} ({self.reward:.2f})"
+
     @property
     def reward(self): return self.result / self.visits
+
+    @property
+    def rave_reward(self): return {move_key: self.rave_result[move_key] / self.rave_visits[move_key] for move_key in self.rave_visits}
