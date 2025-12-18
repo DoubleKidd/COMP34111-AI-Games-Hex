@@ -566,10 +566,11 @@ Describe what method your bot used. For example:
 }
 \paragraph{}
   We originally implemented four different approaches to the problem: vanilla MCTS, an AlphaZero-based approach, alphabeta minimax, and evolutionary strategies for training a simple neural network. 
-  After testing, we found that the AlphaZero approach was the strongest, so we focused on improving that further. The other approaches all had various issues, such as being too slow (minimax), not strong enough (evolutionary strategies), or not optimised enough (vanilla MCTS).
-  However our implementation of AlphaZero also struggled to win games often enough due to a lack of training time, so we decided to use an existing pre-trained model from KataHex instead, adding minimax for endgame scenarios to improve its performance further.
+  After testing, we found that the AlphaZero and MCTS approachs were the strongest, so we focused on improving them further. The other approaches all had various issues, such as being too slow (minimax) or not strong enough (evolutionary strategies).
+  MCTS was typically better than AlphaZero, winning around 60-70\% of games in head-to-head matches. This was likely due to the limited training time available for AlphaZero, even after a week of training, as this is still only thousands of games not millions like AlphaGo. As such, and due to the allowance of it, we decided to use an existing pre-trained model from KataHex instead for our final submission.
+  The KataHex model beat MCTS and AlphaZero consistently in testing, so we focused on improving it further by adding a minimax endgame solver to help it find winning sequences of moves to finsh games, something base KataHex struggled with.
   KataHex uses a similar approach to AlphaZero, using a combination of MCTS and a neural network to evaluate the game state and select moves.
-  The minimax addition helps it to find winning sequences of moves in the endgame more reliably, as this is the point at which the board is solvable.
+  The minimax addition helps it to find winning sequences of moves in the endgame more reliably. It searches until a certain depth for solvable game states, and plays winning moves if found, or blocks opponent winning moves if found. If no certain win/loss moves are found, normal KataHex is used. The depth it searches to scales with the number of moves played in order to keep compute time reasonable.
 
 \subsection{Technical Details}
 \mytodo{
