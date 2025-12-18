@@ -11,12 +11,11 @@ log_dir.mkdir(exist_ok=True)
 log_file = log_dir / f"mcts_{datetime.now().strftime('%d_%H%M%S')}.log"
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
-formatter = logging.Formatter('%(asctime)s\n%(message)s')
+formatter = logging.Formatter('%(message)s')
 file_handler = logging.FileHandler(log_file)
 file_handler.setFormatter(formatter)
-file_handler.setLevel(logging.DEBUG)
 logger.addHandler(file_handler)
 # console_handler = logging.StreamHandler()
 # console_handler.setFormatter(formatter)
@@ -41,16 +40,23 @@ def take_time(last_time: datetime, msg: str) -> datetime:
 def mcts(
     root: Node,
     selection_policy: Callable,
-    iterations: int = 50,
+    time_per_move: float = 5.0,
     discount_factor: float = 0.9,
     win_threshold: float = 1.0,
 ) -> Move:
     """Performs MCTS search and returns the best immediate next move for the AI."""
-    logger.info(f"Performing MCTS with {iterations} iterations as {root.colour.opposite()} on\n{root.state}")
+    logger.info(f"Performing MCTS with {time_per_move}s time limit as {root.colour.opposite()} on\n{root.state}")
 
-    last_time = datetime.now()
-    for _ in range(iterations):
+    start_time = datetime.now()
+    log_time = start_time
+    iteration_count = 0
+    time_left = time_per_move
+
+    while time_left > 0:
+        iteration_count += 1
+        time_left = time_per_move - (datetime.now() - start_time).total_seconds()
         node = root
+        logger.debug(f"Performing iteration {iteration_count} with {time_left}s left.")
 
         # Immediate win check
         # if node.reward >= win_threshold:
@@ -70,9 +76,9 @@ def mcts(
             continue
 
         logger.debug(f"Selected node move: {node.move}")
-        logger.debug(f"\n{node.get_state()}")
+        logger.debug(f"{node.get_state()}")
 
-        last_time = take_time(last_time, "Selection")
+        log_time = take_time(log_time, "Selection")
         # --- EXPANSION ---
         if not node.expanded:
             child = node.expand()
@@ -80,25 +86,31 @@ def mcts(
                 logger.debug("Expansion returned no children (terminal state?).")
                 continue
             logger.debug(f"Expanded node move: {child.move}")
-            logger.debug(f"\n{child.get_state()}")
+            logger.debug(f"{child.get_state()}")
         else:
             child = node
-        last_time = take_time(last_time, "Expansion")
+        log_time = take_time(log_time, "Expansion")
 
         # --- SIMULATION ---
         simulation, result = child.simulate()
         logger.debug(f"Simulated State:\n{simulation}\nResult: {result}")
-        last_time = take_time(last_time, "Simulation")
+        log_time = take_time(log_time, "Simulation")
 
         # --- BACKPROPAGATION ---
         child.backpropagate(result)
-        logger.debug(f"Child reward {child.reward} ({child.reward} / {child.visits})\nParent reward {child.parent.reward if child.parent else 'None'}")
-        last_time = take_time(last_time, "Backpropagation")
+        logger.debug(f"Child reward {child.reward} ({child.result} / {child.visits})\nParent reward {child.parent.reward if child.parent else 'None'}")
+        log_time = take_time(log_time, "Backpropagation")
 
     # After all iterations, select the best child of the root node
+    logger.info(f"Completed {iteration_count} iterations in {(datetime.now() - start_time).total_seconds():.3f}s")
+
     if root.children:
-        best_child = max(root.children, key=lambda c: c.reward)
-        logger.info(f"Best Move: {best_child.move}\nReward: {best_child.reward}\nVisits: {best_child.visits}")
+        # Select best move: highest reward, then most visits as tiebreaker
+        best_child = max(root.children, key=lambda c: (c.reward, c.visits))
+        logger.info(f"Selecting move {best_child.move}.")
+        logger.info(f"This move was rated {best_child.result} / {best_child.visits} ({best_child.reward}).")
+        all_moves = '\n'.join(str(node) for node in sorted(root.children, key=lambda c: (c.reward, c.visits), reverse=True))
+        logger.info(f"All moves:\n{all_moves}")
         return best_child.move
     else:
         # No moves available, return the root state

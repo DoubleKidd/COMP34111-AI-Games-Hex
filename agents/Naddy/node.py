@@ -93,5 +93,8 @@ class Node:
         for child in self.children:
             child.visualise_tree(depth + 1)
 
+    def __repr__(self):
+        return f"Node :: {self.move} with {self.colour} on T{self.turn} :: {self.result} / {self.visits} ({self.reward:.2f})"
+
     @property
     def reward(self): return self.result / self.visits
