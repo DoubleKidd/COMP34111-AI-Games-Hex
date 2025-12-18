@@ -582,13 +582,15 @@ Provide more detail here, such as:
   \item Evaluation strategy and results
 \end{itemize}
 }
-\paragraph{\textbf{Model Architecture:}} The agent runs the \texttt{hex3\_27x\_b28.bin.gz} model. The \texttt{b28} designation indicates a deep network architecture consisting of 28 residual blocks, allowing for high-level abstraction and long-term strategic pattern recognition compared to shallower networks.
+The agent runs the \texttt{hex3\_27x\_b28.bin.gz} model. A model trained on roughly \~6 RTX4090*month, which has millions of games of experiance. It works in a similar way to our AlphaZero style agent, utilising a nerual network of CNN layers.\\\\
 
-\paragraph{\textbf{Input Representation:}} The agent maps the assignment's internal 11x11 board representation to standard GTP commands. It handles coordinate translation (mapping 0--10 indices to A--L/1--11) and dynamically maps the framework's \texttt{Colour.BLUE} and \texttt{Colour.RED} to KataHex's black and white roles.
+My agent handles the creation of the KataHex process from its executable, and uses Hex GTP for communicaiton with it. GTP (Go Text Protocol) was originally used for KataGo, and has been re-purposed for use in hex. This language is used to setup the board, send moves played and ask for the next best (predicted) move. This then gets played. The board is completely synchronised for the first 3 moves to account for possible colour changes. After that, the board is only fully re-synchronised with the KataHex process if the process dies, in order to save on compute.\\\\
 
-\paragraph{\textbf{Configuration \& Tuning:}} Significant tuning was performed on \texttt{config.cfg} to adapt the engine for the CPU-constrained Docker environment. Key MCTS parameters were adjusted, including setting \texttt{cpuctExploration} to 0.9 to balance search exploration. Hardware limits were enforced by reducing \texttt{numSearchThreads} to 6, limiting \texttt{nnCacheSizePowerOfTwo} to 22, and strictly capping \texttt{maxTime} at 2.0 seconds.
+Significant tuning was performed on \texttt{config.cfg} to adapt the engine for the CPU-constrained Docker environment. Most of the performance settings were kept the same, such as exploration. Hardware limits were enforced by enforcing limits in this configuration. There was significant experimentation and benchmarking done during this time to ensure adequate performance and reasonable time.\\\\
 
-\paragraph{\textbf{Dynamic Solver Depth:}} To balance accuracy with speed, the HexSolver calculates search depth dynamically using the formula $\text{depth} = \log(\text{Budget}) / \log(\text{BranchingFactor})$. This allows the solver to search deeper in the endgame (up to full board solution) while remaining shallow in the opening.
+KataHex was very good at getting into winning states, but often struggled to actually win. Thus the game solver (alpha beta style) was used, to explore the game tree to certain depths, and actually finish the games once solved. the solver would only return moves which would certainly lead to a win, regardless of what the opponent played. The model is used if this was not found.\\\\
+
+For the solver, to balance accuracy with speed, the HexSolver calculates search depth dynamically using a log formula based on the number of moves completed. This allows the solver to search deeper in the endgame (up to full board solution) while remaining shallow in the opening.
 
 
 
@@ -602,15 +604,15 @@ Explain what made your bot \emph{strong and powerful}:
 \end{itemize}
 }
 
-\subsection{Unique Aspects and Strengths}
+Unlike approaches requiring extensive training from scratch, our implementation leverages KataHex's neural network pre-trained on millions of games. This model immediately provided strong positional understanding, allowing the bot to recognize winning patterns and strategic formations that would take conventional MCTS thousands of simulations to discover.\\\\
 
-\paragraph{\textbf{Pre-trained Deep Neural Network Advantage:}} Unlike approaches requiring extensive training from scratch, our implementation leverages KataHex's 28-block ResNet pre-trained on millions of expert games and self-play iterations. This ``warm-started'' model immediately provided strong positional understanding, allowing the bot to recognize winning patterns and strategic formations that would take conventional MCTS thousands of simulations to discover.
+While deep neural networks excel at long-term strategic planning, they occasionally miss immediate wins, which could force winning sequences that end the game within a handful of moves. Our hybrid approach addresses this weakness by using a simple Minimax solver with depth calculations to identify guaranteed forced wins. The solver looks a given depth ahead to try and solve the game board, finding winning or losing states. It can then either play in these winning states or block these losing states. This combination ensures that we are leveraging the full strageic advantage that KataHex provides, while guaranteeing that it does not lose in otherwise obvious scenarios, especially in the endgame.\\\\
 
-\paragraph{\textbf{Hybrid Stragegy (Neural Network + Minimax Solver):}} While deep neural networks excel at long-term strategic planning, they occasionally miss immediate tactical ``kill shots''---forced winning sequences that end the game in a handful of moves. Our hybrod approach addresses this weakness by using a simple Minimax solver with depth calculations to identify guaranteed forced wins. The solver uses a scoring heuristic (1000 - depth) to prefer faster victories, which we found that KataHex would often overlook. This combination ensures that we are leveraging the full strageic advantage that KataHex provides, while guaranteeing that it does not lose in otherwise obvious scenarios, especially in the endgame.
+To optimise runtime and to improve model speed, we configured KataHex to run efficiently using the CPU constraned docker container. By tuning parameters such as cache size, number of threads to utilise, we ensured that the most of the available resources were used, maximising the number of simulations we could run per turn within the strict time limit.  \\\\
 
-\paragraph{\textbf{CPU-Constrained Optimization:}} To optimise runtime and to improve model speed, we configured KataHex to run efficiently using the CPU constraned docker container. By tuning parameters such as cache size, number of threads to utilise, we ensured that the most of the available resources were used, maximising the number of simulations we could run per turn within the strict time limit.  
+To ensure that longer runs would be able to be completed, we implemented a fail-safe mechanism that would ensure that the model would keep running, and restarting it if it had crashed. This was achieved by rerunning the model using the previous board states to recreate the current board state, allowing it to continue from where it has left off. \\\\
 
-\paragraph{\textbf{Robust runtime}} To ensure that longer runs would be able to be completed, we implemented a fail-safe mechanism that would ensure that the model would keep running, and restarting it if it had crashed. This was achieved by rerunning the model using the previous board states, allowing it to continue from where it has left off.
+This model won in every game tested against Naive, MCTS, AlphaZero models, proving its effectiveness.
 
 \subsection{Limitations and Possible Improvements}
 \mytodo{
@@ -620,9 +622,11 @@ Briefly acknowledge:
   \item Improvements you would make with more time
 \end{itemize}
 }
-\paragraph{\textbf{Time Management Overhead:}} The fail-safe synchronization logic introduces slight latency during complex board states. In extremely tight time controls, the overhead of re-launching the process if it crashes could risk a timeout.
+The fail-safe synchronization logic introduces slight latency during complex board states. In extremely tight time controls, the overhead of re-launching the process if it crashes could risk a timeout.\\\\
 
-\paragraph{\textbf{Opening Book:}} The bot currently relies on the neural network for opening moves (Turn 1--2). Implementing a hard-coded opening book for the ``Swap'' phase could save time and ensure optimal play against non-standard openings.
+The solver is currently inefficient checking every avaliable nodes. It would be good to build possible chains, and only consider moves that could block or finish them to make it more efficient, allowing you to check more depth due to less computation being required as less nodes are checked. This could be done by only checking neighbouring nodes, instead of all nodes, and that is done recursively.\\\\
+
+The bot currently relies on the neural network for opening moves (Turn 1--2). Implementing a hard-coded opening book for the ``Swap'' phase could save time and ensure optimal play against non-standard openings.
 % ---------- Signatures ----------
 \subsection{Group Member Signatures}
 Each member of the group should sign this section with their name and student ID.
