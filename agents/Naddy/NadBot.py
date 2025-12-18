@@ -1,7 +1,7 @@
 from random import choice
 
 from agents.Naddy.node import Node
-from agents.Naddy.policy import ucb1_policy
+from agents.Naddy.policy import rave_ucb_policy, ucb1_policy
 from agents.Naddy.search import mcts
 from src.AgentBase import AgentBase
 from src.Board import Board
@@ -43,6 +43,10 @@ class NadBot(AgentBase):
 
         previous_node = None
         # Remove opponents last move from choices
+
+        if turn == 2:
+            return Move(-1, -1)
+
         if opp_move is not None and opp_move.x != -1:
             opponent_move = (opp_move.x, opp_move.y)
 
@@ -55,8 +59,8 @@ class NadBot(AgentBase):
         )
         best_move = mcts(
             current_node,
-            ucb1_policy,
-            time_per_move=3
+            rave_ucb_policy,
+            time_per_move=4.8
         )
         # current_node.visualise_tree()
 

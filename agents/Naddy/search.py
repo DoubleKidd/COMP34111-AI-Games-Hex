@@ -41,7 +41,6 @@ def mcts(
     root: Node,
     selection_policy: Callable,
     time_per_move: float = 5.0,
-    discount_factor: float = 0.9,
     win_threshold: float = 1.0,
 ) -> Move:
     """Performs MCTS search and returns the best immediate next move for the AI."""
@@ -56,7 +55,7 @@ def mcts(
         iteration_count += 1
         time_left = time_per_move - (datetime.now() - start_time).total_seconds()
         node = root
-        logger.debug(f"Performing iteration {iteration_count} with {time_left}s left.")
+        logger.debug(f"Performing iteration {iteration_count} with {time_left:.03f}s left.")
 
         # Immediate win check
         # if node.reward >= win_threshold:
@@ -67,38 +66,38 @@ def mcts(
         while node is not None and node.has_children():
             child = selection_policy(node)
             if child is None:
-                logger.debug("Selection returned None.")
+                # logger.debug("Selection returned None.")
                 break
             node = child
 
         if node is None:
-            logger.debug("Selection failed to find a node.")
+            # logger.debug("Selection failed to find a node.")
             continue
 
-        logger.debug(f"Selected node move: {node.move}")
-        logger.debug(f"{node.get_state()}")
+        # logger.debug(f"Selected node move: {node.move}")
+        # logger.debug(f"{node.get_state()}")
 
         log_time = take_time(log_time, "Selection")
         # --- EXPANSION ---
         if not node.expanded:
             child = node.expand()
             if child is None:
-                logger.debug("Expansion returned no children (terminal state?).")
+                # logger.debug("Expansion returned no children (terminal state?).")
                 continue
-            logger.debug(f"Expanded node move: {child.move}")
-            logger.debug(f"{child.get_state()}")
+            # logger.debug(f"Expanded node move: {child.move}")
+            # logger.debug(f"{child.get_state()}")
         else:
             child = node
         log_time = take_time(log_time, "Expansion")
 
         # --- SIMULATION ---
-        simulation, result = child.simulate()
-        logger.debug(f"Simulated State:\n{simulation}\nResult: {result}")
+        simulation, result, moves_played = child.simulate()
+        # logger.debug(f"Simulated State:\n{simulation}\nResult: {result}")
         log_time = take_time(log_time, "Simulation")
 
         # --- BACKPROPAGATION ---
-        child.backpropagate(result)
-        logger.debug(f"Child reward {child.reward} ({child.result} / {child.visits})\nParent reward {child.parent.reward if child.parent else 'None'}")
+        child.backpropagate(result, moves_played)
+        # logger.debug(f"Child reward {child.reward} ({child.result} / {child.visits})\nParent reward {child.parent.reward if child.parent else 'None'}")
         log_time = take_time(log_time, "Backpropagation")
 
     # After all iterations, select the best child of the root node
