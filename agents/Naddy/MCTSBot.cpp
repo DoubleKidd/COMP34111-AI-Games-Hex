@@ -14,7 +14,6 @@ static mt19937 rng(random_device{}());
 
 /* ===================== COLOUR ===================== */
 enum class Colour { NONE, RED, BLUE };
-
 Colour opposite(Colour c) {
     if (c == Colour::RED) return Colour::BLUE;
     if (c == Colour::BLUE) return Colour::RED;
@@ -30,7 +29,6 @@ struct Move {
 
 /* ===================== BOARD ===================== */
 struct Tile { Colour colour = Colour::NONE; };
-
 class Board {
 public:
     int size;
@@ -56,14 +54,16 @@ double state_to_result(const Board& state, Colour colour) {
     return 0.5;
 }
 
-pair<Board, vector<Move>> simulate(const Board& state, Colour colour) {
+pair<Board, vector<Move>> simulate(const Board& state, Colour colour, int max_rollout = 10) {
     Board sim = state;
     vector<Move> moves = generate_actions(sim);
     shuffle(moves.begin(), moves.end(), rng);
 
     Colour current = colour;
     vector<Move> played;
+    int count = 0;
     for (auto& mv : moves) {
+        if (count++ >= max_rollout) break; // limit rollout length
         sim.set_tile_colour(mv.x, mv.y, current);
         current = opposite(current);
         played.push_back(mv);
@@ -90,17 +90,18 @@ struct Node : public enable_shared_from_this<Node> {
 
     bool has_children() const { return !children.empty(); }
 
-    shared_ptr<Node> expand() {
+    shared_ptr<Node> expand(int max_children = 10) {
         expanded = true;
         auto actions = generate_actions(state);
         if (actions.empty()) return nullptr;
 
-        shuffle(actions.begin(), actions.end(), rng); // shuffle moves to break bias
+        shuffle(actions.begin(), actions.end(), rng);
+        int limit = min((int)actions.size(), max_children);
 
-        for (auto& mv : actions) {
+        for (int i = 0; i < limit; ++i) {
             Board next = state;
-            next.set_tile_colour(mv.x, mv.y, opposite(colour));
-            children.push_back(make_shared<Node>(next, mv, opposite(colour), turn + 1, shared_from_this()));
+            next.set_tile_colour(actions[i].x, actions[i].y, opposite(colour));
+            children.push_back(make_shared<Node>(next, actions[i], opposite(colour), turn + 1, shared_from_this()));
         }
 
         return children[rng() % children.size()];
@@ -173,7 +174,7 @@ int main() {
 
     while (true) {
         string token;
-        if (!(cin >> token)) break; // stdin closed
+        if (!(cin >> token)) break;
         if (token != "SIZE") break;
 
         int size; cin >> size;
@@ -202,7 +203,7 @@ int main() {
         cin >> token; // END
 
         auto root = make_shared<Node>(board, opp_move, my_colour, turn);
-        Move best = mcts(root, 3.0);
+        Move best = mcts(root, 2.0); // reduce time per move for safety
 
         cout << "MOVE " << best.x << " " << best.y << endl;
         cout.flush();
