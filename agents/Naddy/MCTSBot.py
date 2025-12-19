@@ -9,7 +9,7 @@ from src.Colour import Colour
 from src.Move import Move
 
 
-class NadBot(AgentBase):
+class MCTSBot(AgentBase):
     """This class describes the default Hex agent. It will randomly send a
     valid move at each turn, and it will choose to swap with a 50% chance.
 

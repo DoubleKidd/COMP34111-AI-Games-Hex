@@ -108,7 +108,7 @@ class Node:
         return f"Node :: {self.move} with {self.colour} on T{self.turn} :: {self.result} / {self.visits} ({self.reward:.2f})"
 
     @property
-    def reward(self): return self.result / self.visits
+    def reward(self): return self.result / self.visits if self.visits > 0 else 0.0
 
     @property
     def rave_reward(self): return {move_key: self.rave_result[move_key] / self.rave_visits[move_key] for move_key in self.rave_visits}

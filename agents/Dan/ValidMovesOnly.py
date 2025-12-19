@@ -11,7 +11,7 @@ class Valid(AgentBase):
     """
 
     _choices: list[Move]
-    _board_size: int = 7
+    _board_size: int = 11
 
     def __init__(self, colour: Colour):
         super().__init__(colour)
